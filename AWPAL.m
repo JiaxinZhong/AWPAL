@@ -6,7 +6,6 @@ addpath('math/Zernike');
 % 2D 
 addpath('2d');
 
-
 % convolution model
 addpath('conv')
 
@@ -17,5 +16,9 @@ addpath('GBE')
 % direct method which performs the numerical integration directly
 addpath('direct');
 
-addpath('auxilirary')
+% Axialiary files
+addpath('auxiliary')
+addpath('auxiliary/figure');
+
+
 addpath('SWE')

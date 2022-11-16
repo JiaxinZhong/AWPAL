@@ -1,0 +1,119 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3831,        111]
+NotebookOptionsPosition[      3247,         93]
+NotebookOutlinePosition[      3656,        109]
+CellTagsIndexPosition[      3613,        106]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"k", "=", 
+   RowBox[{"7.327329804291063*^2", "+", 
+    RowBox[{"1.480051444435529*^-1", "\[ImaginaryI]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"a", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"b", "=", ".1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m", "=", 
+   RowBox[{"-", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"u", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"-", "1"}], ")"}], "^", "m"}]}], ")"}], "/", "2"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"NIntegrate", "[", 
+  RowBox[{
+   RowBox[{"u", " ", 
+    RowBox[{"BesselJ", "[", 
+     RowBox[{"m", ",", 
+      RowBox[{"k", " ", "r"}]}], "]"}], "k"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"r", ",", "a", ",", "b"}], "}"}], ",", 
+   RowBox[{"WorkingPrecision", "->", "20"}], ",", 
+   RowBox[{"MaxRecursion", "\[Rule]", "100"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.866875095879771*^9, 3.8668751189815187`*^9}, {
+  3.866875199006626*^9, 3.8668752013563585`*^9}, {3.866875282526589*^9, 
+  3.8668753236771927`*^9}, {3.866875383175149*^9, 3.866875399906763*^9}},
+ CellLabel->
+  "In[161]:=",ExpressionUUID->"a55108da-94d6-400c-b120-8bd58c1ffa7f"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NIntegrate", "precw", 
+   "\"The precision of the argument function \
+(\\!\\(\\*RowBox[{RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"732.7329804291063`\\\
+\", \\\"\[VeryThinSpace]\\\"}], \\\"+\\\", \
+RowBox[{\\\"0.1480051444435529`\\\", \\\" \\\", \\\"\[ImaginaryI]\\\"}]}], \\\
+\")\\\"}], \\\" \\\", RowBox[{\\\"BesselJ\\\", \\\"[\\\", RowBox[{\\\"2\\\", \
+\\\",\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"732.7329804291063`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"+\
+\\\", RowBox[{\\\"0.1480051444435529`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", \\\"r\\\"}]}], \
+\\\"]\\\"}]}]\\)) is less than WorkingPrecision \
+(\\!\\(\\*RowBox[{\\\"20.`\\\"}]\\)).\"", 2, 166, 56, 20749520192733220232, 
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.8668753239804316`*^9, {3.8668753838801966`*^9, 3.8668754005344286`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[161]:=",ExpressionUUID->"e8a24a9e-8e92-4e41-a088-fa54c454daa2"],
+
+Cell[BoxData[
+ RowBox[{"1.02307467612670303617100527800327385271`20.", "+", 
+  RowBox[{
+  "0.00133459304132252526854155536452597013`20.", " ", 
+   "\[ImaginaryI]"}]}]], "Output",
+ CellChangeTimes->{
+  3.866875324137025*^9, {3.866875383927208*^9, 3.866875400681896*^9}},
+ CellLabel->
+  "Out[166]=",ExpressionUUID->"526fab89-bd6b-4a61-b72c-b780d3b66f33"]
+}, Open  ]]
+},
+WindowSize->{786.5, 422.5},
+WindowMargins->{{Automatic, 147}, {253.5, Automatic}},
+FrontEndVersion->"13.0 for Microsoft Windows (64-bit) (February 4, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"7bdba47f-8795-48da-b51a-fa3104db49c6"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1283, 36, 124, "Input",ExpressionUUID->"a55108da-94d6-400c-b120-8bd58c1ffa7f"],
+Cell[1866, 60, 1010, 20, 46, "Message",ExpressionUUID->"e8a24a9e-8e92-4e41-a088-fa54c454daa2"],
+Cell[2879, 82, 352, 8, 32, "Output",ExpressionUUID->"526fab89-bd6b-4a61-b72c-b780d3b66f33"]
+}, Open  ]]
+}
+]
+*)
+

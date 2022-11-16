@@ -1,0 +1,5 @@
+PWD C:/Research/PalBook2204/matlab/AWPAL/SWE/fig
+INPUT c:/texlive/2022/texmf.cnf
+INPUT c:/texlive/2022/texmf-dist/web2c/texmf.cnf
+INPUT c:/texlive/2022/texmf-var/web2c/xetex/xelatex.fmt
+INPUT PalCircSrc_SWE_TestDir_220825A_40kHz_4000Hz_5cm_quadratic1.tex

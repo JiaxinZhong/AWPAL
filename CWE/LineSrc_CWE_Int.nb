@@ -1,0 +1,204 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      7326,        196]
+NotebookOptionsPosition[      6423,        173]
+NotebookOutlinePosition[      6832,        189]
+CellTagsIndexPosition[      6789,        186]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"k", "=", 
+   RowBox[{"7.327329804291063*^2", "+", 
+    RowBox[{"1.480051444435529*^-1", "\[ImaginaryI]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rho1", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rho2", "=", ".3"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rho", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m", "=", "200"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"u", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"-", "1"}], ")"}], "^", "m"}]}], ")"}], "/", "2"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"NIntegrate", "[", 
+  RowBox[{
+   RowBox[{"u", " ", 
+    RowBox[{"BesselJ", "[", 
+     RowBox[{"m", ",", 
+      RowBox[{"k", " ", "r"}]}], "]"}], 
+    RowBox[{"HankelH1", "[", 
+     RowBox[{"m", ",", " ", 
+      RowBox[{"k", " ", "rho"}]}], "]"}], " ", "k"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"r", ",", "rho1", ",", "rho2"}], "}"}], ",", 
+   RowBox[{"WorkingPrecision", "->", "20"}], ",", 
+   RowBox[{"MaxRecursion", "\[Rule]", "100"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.866875095879771*^9, 3.8668751189815187`*^9}, {
+  3.866875199006626*^9, 3.8668752013563585`*^9}, {3.866875282526589*^9, 
+  3.8668753236771927`*^9}, {3.866875383175149*^9, 3.866875399906763*^9}, {
+  3.869542466873746*^9, 3.869542472389726*^9}, {3.8695425068467216`*^9, 
+  3.8695425657021766`*^9}, {3.8695426527543736`*^9, 3.86954267526021*^9}},
+ CellLabel->"In[50]:=",ExpressionUUID->"a55108da-94d6-400c-b120-8bd58c1ffa7f"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NIntegrate", "precw", 
+   "\"The precision of the argument function \
+(\\!\\(\\*RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"12.611414439157226`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", RowBox[{\\\"14.341401017213688`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", RowBox[{\\\"BesselJ\\\", \
+\\\"[\\\", RowBox[{\\\"200\\\", \\\",\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"732.7329804291063`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"+\
+\\\", RowBox[{\\\"0.1480051444435529`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", \\\"r\\\"}]}], \
+\\\"]\\\"}]}]\\)) is less than WorkingPrecision \
+(\\!\\(\\*RowBox[{\\\"20.`\\\"}]\\)).\"", 2, 56, 10, 20766996867976886188, 
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.8668753239804316`*^9, {3.8668753838801966`*^9, 3.8668754005344286`*^9}, {
+   3.8695425384791727`*^9, 3.8695425659682465`*^9}, {3.8695426531509495`*^9, 
+   3.8695426754721003`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[50]:=",ExpressionUUID->"01c0c818-27eb-4360-a5f6-7dc4b299099f"],
+
+Cell[BoxData[
+ RowBox[{"0.01381909812129283755362349989353252626`20.", "-", 
+  RowBox[{
+  "0.01570266093770790469952838101094455237`20.", " ", 
+   "\[ImaginaryI]"}]}]], "Output",
+ CellChangeTimes->{
+  3.866875324137025*^9, {3.866875383927208*^9, 3.866875400681896*^9}, {
+   3.8695425387034335`*^9, 3.869542566016773*^9}, {3.869542653644863*^9, 
+   3.869542676525152*^9}},
+ CellLabel->"Out[56]=",ExpressionUUID->"6aa699b3-c305-4d72-bd34-d299bdb43668"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"k", "=", 
+   RowBox[{"7.327329804291063*^2", "+", 
+    RowBox[{"1.480051444435529*^-1", "\[ImaginaryI]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rho1", "=", "0.1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rho2", "=", ".3"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rho", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m", "=", "200"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"u", "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"1", "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"-", "1"}], ")"}], "^", "m"}]}], ")"}], "/", "2"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"NIntegrate", "[", 
+  RowBox[{
+   RowBox[{"u", " ", 
+    RowBox[{"HankelH1", "[", 
+     RowBox[{"m", ",", 
+      RowBox[{"k", " ", "r"}]}], "]"}], 
+    RowBox[{"BesselJ", "[", 
+     RowBox[{"m", ",", " ", 
+      RowBox[{"k", " ", "rho"}]}], "]"}], " ", "k"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"r", ",", "rho1", ",", "rho2"}], "}"}], ",", 
+   RowBox[{"WorkingPrecision", "->", "20"}], ",", 
+   RowBox[{"MaxRecursion", "\[Rule]", "100"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.8695427470677094`*^9, 3.869542753571103*^9}},
+ CellLabel->"In[57]:=",ExpressionUUID->"e6402185-7b89-4d8e-a685-2d9a09d207ee"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NIntegrate", "precw", 
+   "\"The precision of the argument function \
+(\\!\\(\\*RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"14.687100662346262`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"+\\\", RowBox[{\\\"2.3639915712826616`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", RowBox[{\\\"HankelH1\\\", \
+\\\"[\\\", RowBox[{\\\"200\\\", \\\",\\\", RowBox[{RowBox[{\\\"(\\\", \
+RowBox[{RowBox[{\\\"732.7329804291063`\\\", \\\"\[VeryThinSpace]\\\"}], \\\"+\
+\\\", RowBox[{\\\"0.1480051444435529`\\\", \\\" \\\", \
+\\\"\[ImaginaryI]\\\"}]}], \\\")\\\"}], \\\" \\\", \\\"r\\\"}]}], \
+\\\"]\\\"}]}]\\)) is less than WorkingPrecision \
+(\\!\\(\\*RowBox[{\\\"20.`\\\"}]\\)).\"", 2, 63, 11, 20766996867976886188, 
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.8695427538721256`*^9},
+ CellLabel->
+  "During evaluation of \
+In[57]:=",ExpressionUUID->"cf4dff86-bbad-4673-813b-7ff24d77aec9"],
+
+Cell[BoxData[
+ RowBox[{"1.9421514209239118877145641047374867181535`19.2359628967646*^59", 
+  "-", 
+  RowBox[{
+  "1.58340722885195377742400589382546964834095`20.147272433186465*^60", " ", 
+   "\[ImaginaryI]"}]}]], "Output",
+ CellChangeTimes->{3.8695427581001387`*^9},
+ CellLabel->"Out[63]=",ExpressionUUID->"88a75ac4-5a96-4570-9f11-528ea95a8f30"]
+}, Open  ]]
+},
+WindowSize->{786.5, 422.5},
+WindowMargins->{{Automatic, 408.5}, {183, Automatic}},
+FrontEndVersion->"13.0 for Microsoft Windows (64-bit) (February 4, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"7bdba47f-8795-48da-b51a-fa3104db49c6"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1600, 41, 162, "Input",ExpressionUUID->"a55108da-94d6-400c-b120-8bd58c1ffa7f"],
+Cell[2183, 65, 1119, 22, 46, "Message",ExpressionUUID->"01c0c818-27eb-4360-a5f6-7dc4b299099f"],
+Cell[3305, 89, 450, 9, 32, "Output",ExpressionUUID->"6aa699b3-c305-4d72-bd34-d299bdb43668"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3792, 103, 1305, 37, 162, "Input",ExpressionUUID->"e6402185-7b89-4d8e-a685-2d9a09d207ee"],
+Cell[5100, 142, 959, 19, 46, "Message",ExpressionUUID->"cf4dff86-bbad-4673-813b-7ff24d77aec9"],
+Cell[6062, 163, 345, 7, 32, "Output",ExpressionUUID->"88a75ac4-5a96-4570-9f11-528ea95a8f30"]
+}, Open  ]]
+}
+]
+*)
+

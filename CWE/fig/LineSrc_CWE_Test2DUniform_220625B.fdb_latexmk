@@ -1,0 +1,11 @@
+# Fdb version 3
+["xdvipdfmx"] 0 "LineSrc_CWE_Test2DUniform_220625B.xdv" "LineSrc_CWE_Test2DUniform_220625B.pdf" "LineSrc_CWE_Test2DUniform_220625B" 0
+  "LineSrc_CWE_Test2DUniform_220625B.xdv" 0 -1 0 "xelatex"
+  (generated)
+  "LineSrc_CWE_Test2DUniform_220625B.pdf"
+["xelatex"] 0 "LineSrc_CWE_Test2DUniform_220625B.tex" "LineSrc_CWE_Test2DUniform_220625B.xdv" "LineSrc_CWE_Test2DUniform_220625B" 0
+  "LineSrc_CWE_Test2DUniform_220625B.aux" 1656166827 34 3985256e7290058c681f74d7a3565a19 ""
+  "LineSrc_CWE_Test2DUniform_220625B.tex" 0 -1 0 ""
+  (generated)
+  "LineSrc_CWE_Test2DUniform_220625B.log"
+  "LineSrc_CWE_Test2DUniform_220625B.xdv"

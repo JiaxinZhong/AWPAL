@@ -32,7 +32,7 @@ function prs = PalCircSrc_SWE(pal, fp, varargin)
 	ip.addParameter('eqn', 'Westervelt', @(x)any(validatestring(x, {'Westervelt', 'WesterveltCorrection', 'Kuznetsov'})));
     % Calculate the sound pressure using the inward extrapolated farfield pressure
 	ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
-    ip.addParameter('la_max', ceil(real(pal.audio.num)*pal.src_ultra.radius*1.5));
+    ip.addParameter('la_max', ceil(real(pal.audio.num)*pal.src_ultra.radius*30));
     ip.addParameter('l1_max', ceil(real(pal.ultra_low.num)*pal.src_ultra.radius*1.2));
     ip.addParameter('l2_max', ceil(real(pal.ultra_high.num)*pal.src_ultra.radius*1.2));
     % mute the displayed info

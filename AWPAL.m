@@ -1,24 +1,7 @@
-% Math 
-addpath('math');
-addpath('math/quad');
-addpath('math/Zernike');
+%% Run this script first
 
-% 2D 
-addpath('2d');
-
-% convolution model
-addpath('conv')
-
-% cylindrical wave expansion
-addpath('CWE');
-% Gaussian beam expansion
-addpath('GBE')
-% direct method which performs the numerical integration directly
-addpath('direct');
-
-% Axialiary files
-addpath('auxiliary')
-addpath('auxiliary/figure');
-
-
-addpath('SWE')
+%% add current folder to the path
+% Determine where your m-file's folder is.
+folder = fileparts(which(mfilename)); 
+% Add that folder plus all subfolders to the path.
+addpath(genpath(folder));

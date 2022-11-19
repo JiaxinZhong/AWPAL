@@ -1,9 +1,9 @@
 clear all
 
 %% wave info
-% prf = SrcProfile('name', 'uniform');
+prf = SrcProfile('name', 'uniform');
 % prf = SrcProfile('name', 'cosine', 'order', 1);
-prf = SrcProfile('name', 'steerable', 'phi', (90+15)/180*pi);
+% prf = SrcProfile('name', 'steerable', 'phi', (90+15)/180*pi);
 % prf = SrcProfile('name', 'cosine_steerable', 'order', 1, 'phi', (90+15)/180*pi);
 src = LineSrc('radius', .05, 'prf', prf);
 pal = PalSrc('audio_freq', 4e3, 'ultra_freq', 40e3, 'src', src);

@@ -13,10 +13,10 @@ classdef SrcProfile < handle
             ip = inputParser();
             ip.addParameter('name', []);
             ip.addParameter('azimuth_order', 0);
-            ip.addParameter('degree', []);
-            ip.addParameter('order', []);
-            ip.addParameter('theta', []);
-            ip.addParameter('phi', []);
+            ip.addParameter('degree', 0);
+            ip.addParameter('order', 0);
+            ip.addParameter('theta', 0);
+            ip.addParameter('phi', 0);
             ip.parse(varargin{:});
             ip = ip.Results;
             

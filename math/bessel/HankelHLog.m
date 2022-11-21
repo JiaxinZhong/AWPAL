@@ -5,7 +5,7 @@
 %   - n: order
 % =========================================================================
 
-function H = HankelHLog(n, z, varargin)
+function [H, H_prime] = HankelHLog(n, z, varargin)
 
     validateattributes(n, {'numeric'}, {'size', [nan, 1]});
     
@@ -15,6 +15,8 @@ function H = HankelHLog(n, z, varargin)
         {'scalar', '>=', 0, '<', 1}));   
     ip.addParameter('kind', 1, ...
         @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 1, '<=', 2}));
+    ip.addParameter('is_cal_derivative', false, ...
+        @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.parse(varargin{:});
     ip = ip.Results;
 
@@ -25,6 +27,7 @@ function H = HankelHLog(n, z, varargin)
     [z_row, ~, idx_z_row] = unique(z_row0);
 
     H = 0 * n_full .* z_row;
+    H_prime = 0 * n_full .* z_row;
 
     idx_z_large = abs(z_row) > ip.z_large;
     idx_z_small = abs(z_row) <= ip.z_large;
@@ -39,12 +42,25 @@ function H = HankelHLog(n, z, varargin)
         H(:,idx_z_large) = HankelH_Asym(n_full+ip.nu0, z_large, ...
             'approx_order', N+5, 'is_log', true, 'kind', ip.kind);
     end
+    if ip.is_cal_derivative
+        [~, H_prime] = HankelHLog_Rothwell(N, z_row, 'nu0', ip.nu0, ...
+            'kind', ip.kind, 'is_cal_derivative', ip.is_cal_derivative);
+    end
     
     H = H(:, idx_z_row);
     H = H(abs(n)+1, :);
+    if ip.is_cal_derivative
+        H_prime = H_prime(abs(n)+1, :);
+    end
     if ~isempty(n(n<0))
         H(n<0,:) = H(n<0, :) + log(-1) .* n(n<0);
+        if ip.is_cal_derivative
+            H_prime(n<0,:) = H_prime(n<0, :) + log(-1) .* n(n<0);
+        end
     end
     H = reshape(H, size(n .* z));
+    if ip.is_cal_derivative
+        H_prime = reshape(H_prime, size(n .* z));
+    end
 end
 

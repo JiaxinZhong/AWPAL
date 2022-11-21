@@ -51,7 +51,7 @@ function [J, J_prime] = BesselJLog_Rothwell(N, z, varargin)
     J = reshape(J, size(n .* z_row0));
     if ip.is_cal_derivative
         J_prime = J_prime(:, idx_z_row);
-        J_prime = reshape(J, size(n .* z_row0));
+        J_prime = reshape(J_prime, size(n .* z_row0));
     end
 end
 

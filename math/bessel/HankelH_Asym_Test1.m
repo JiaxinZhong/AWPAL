@@ -1,11 +1,11 @@
 m = 10;
 arg = logspace(0, 4, 1e3).' * (1+0.001*1i);
 
-kind = 2;
+kind = 1;
 H0 = log(besselh(m, kind, arg, 1)) + (-1).^(kind+1).*1i*arg;
 % H0 = besselh(m, kind, arg);
 tic
-H = HankelH_Asym(m, arg, 'approx_order', 1e4, ...
+H = HankelH_Asym(m, arg, 'approx_order', 0, ...
     'kind', kind, 'is_log', true, 'tol', 1e-15);
 toc
 

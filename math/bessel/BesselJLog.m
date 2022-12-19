@@ -1,3 +1,4 @@
+% legacy
 % =========================================================================
 % INTRO
 %   - The Log of Bessel function of first kind
@@ -6,6 +7,8 @@
 % =========================================================================
 
 function J = BesselJLog(n, z, varargin)
+
+    CheckDim('preceeding', n, z);
 
     ip = inputParser;
     ip.addParameter('z_large', 1e3);

@@ -3,10 +3,12 @@
 %   - Calculate the Hankel function using the asymptotic expansions at 
 %       large arguments
 % =========================================================================
-function H = HankelH_Asym(m, arg, varargin)
+function H = HankelH_Asym(m, z, varargin)
 % 
+    CheckDim('preceding', m, z);
+
     ip = inputParser;
-    ip.addParameter('approx_order', 2);
+    ip.addParameter('approx_order', 0);
     ip.addParameter('tol', 1e-15);
     % true: the result is the logarithmic of H
     ip.addParameter('is_log', false);
@@ -14,17 +16,10 @@ function H = HankelH_Asym(m, arg, varargin)
     ip.parse(varargin{:})
     ip = ip.Results;
 
-    m_dim = ndims(m);
-    arg_dim = ndims(arg);
-    if (m_dim > arg_dim)
-        error("Dimension of the arguments must be larger than orders!")
-    end
-
     m_col = m(:);
-    arg_row = arg(:).';
+    arg_row = z(:).';
 
     % use log to avoid overflow/underflow
-    
     omega = (-1).^(ip.kind+1) .* (arg_row - m*pi./2 - pi/4);
     % the index of arguments which needs to process
     idx_arg = true(size(arg_row));
@@ -49,5 +44,5 @@ function H = HankelH_Asym(m, arg, varargin)
     else
         H = exp(H) .* sqrt(2/pi./arg_row) .* exp(1i*omega);
     end
-    H = reshape(H, size(m .* arg));
+    H = reshape(H, size(m .* z));
 end

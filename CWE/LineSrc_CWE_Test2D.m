@@ -2,7 +2,7 @@
 clear all
 
 % prf = SrcProfile('name', 'uniform');
-prf = SrcProfile('name', 'cosine', 'order', 1);
+% prf = SrcProfile('name', 'cosine', 'order', 1);
 src = LineSrc('prf', prf, 'radius', 0.1, 'freq', 40e3);
 m_max = ceil(src.radius .* real(src.wav.num) *1.5);
 
@@ -19,8 +19,9 @@ spl = PrsToSpl(prs);
 fig = Figure;
 pcolor(fp.y.', fp.x.', spl.')
 fig.Init;
-ylim([-.5,.5]*exp(1)/pi)
-xlim([0,4]);
+% ylim([-.5,.5]*exp(1)/pi)
+ylim([-1,1])
+xlim([0,3]);
 % caxis([90,140]);
 xlabel('y(m)');
 ylabel('x(m)');

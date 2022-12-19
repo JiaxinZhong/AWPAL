@@ -11,7 +11,7 @@ classdef SrcProfile < handle
     methods
         function obj = SrcProfile(varargin)
             ip = inputParser();
-            ip.addParameter('name', []);
+            ip.addParameter('name', 'uniform');
             ip.addParameter('azimuth_order', 0);
             ip.addParameter('degree', 0);
             ip.addParameter('order', 0);

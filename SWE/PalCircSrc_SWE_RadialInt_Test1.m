@@ -13,7 +13,7 @@ fp.Sph2Cart();
 
 tic
 sph = 'j';
-R = PalCircSrc_SWE_Int(pal, la, l1_max, l2_max, r1, r2, r, sph);
+R = PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r1, r2, r, sph);
 toc
 
 ang = [-flip(fp.theta), fp.theta];

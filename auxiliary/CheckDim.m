@@ -8,9 +8,12 @@ function res = CheckDim(type, varargin)
     end
     
     switch type
-        case 'preceeding'
-            for i = 1:numel(size(varargin{1}))
-                if size(varargin{2}, i) > 1
+        case 'preceding'
+            if (numel(varargin{1}) == 1 || numel(varargin{2}) == 1)
+                return
+            end
+            for i = 1:numel(size(varargin{1}))-1
+                if (size(varargin{2}, i) > 1)
                     for j = 1:2
                         fprintf("Size of variable '%s' is %s.\n", ...
                             arg_name{j}, ...

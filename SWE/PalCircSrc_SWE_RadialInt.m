@@ -79,7 +79,6 @@ function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max)
     m2 = pal.src_high.prf.azimuth_order;
     ma = m2 - m1;
 
-
     tt = tic;
     int_num = 5e2;
     % dim: r .* rv -> 1 -> 1 -> l1

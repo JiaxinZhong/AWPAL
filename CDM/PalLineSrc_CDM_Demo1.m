@@ -1,7 +1,7 @@
 clear all
 prf = SrcProfile('name', 'uniform');
-src = LineSrc('radius', 0.05, 'prf', prf);
-pal = PalSrc('audio_freq', 8e3, 'ultra_freq', 40e3, 'src', src);
+src = LineSrc('radius', 0.2, 'prf', prf);
+pal = PalSrc('audio_freq', 4e3, 'ultra_freq', 40e3, 'src', src);
 
 %% The field points 
 phi = linspace(0, pi, 2e2).';
@@ -14,7 +14,7 @@ dir_improved = PalLineSrc_CDM(pal, phi, 'type', 'improved', 'is_norm_dB', true);
 toc
 
 %% plot results
-figure 
+fig = Figure; 
 plot(phi/pi*180, dir_Westervelt)
 hold on
 plot(phi/pi*180, dir_direct)
@@ -22,3 +22,4 @@ plot(phi/pi*180, dir_improved)
 legend('Westervelt directivity', 'Direct CDM', 'Improved CDM')
 xlabel("Angle (\circ)")
 ylabel("Directivity (dB)")
+fig.Init;

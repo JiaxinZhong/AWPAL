@@ -22,7 +22,7 @@ classdef LineSrc < handle
             ip.addParameter('wav', []);
             ip.addParameter('freq', []);
             ip.addParameter('radius', []);
-            ip.addParameter('prf', []);
+            ip.addParameter('prf', SrcProfile('name', 'uniform'));
             ip.parse(varargin{:});
             ip = ip.Results;
 
@@ -60,6 +60,7 @@ classdef LineSrc < handle
                     error('Wrong profile!')
             end
         end
+
         function dir = CalDirectivity(obj, phi)
             kx = real(obj.wav.num) .* cos(phi);
             switch obj.prf.name

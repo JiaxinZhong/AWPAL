@@ -2,12 +2,13 @@
 % INTRO
 %   - The Log of Hankel function of first kind
 % INPUT
-%   - n: order
+%   - m: order
 % =========================================================================
+function [H, H_prime] = HankelHLog(m, z, varargin)
 
-function [H, H_prime] = HankelHLog(n, z, varargin)
+    CheckDim('preceding', m, z);
 
-    validateattributes(n, {'numeric'}, {'size', [nan, 1]});
+    validateattributes(m, {'numeric'}, {'size', [nan, 1]});
     
     ip = inputParser;
     ip.addParameter('z_large', 1e3);
@@ -17,12 +18,13 @@ function [H, H_prime] = HankelHLog(n, z, varargin)
         @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 1, '<=', 2}));
     ip.addParameter('is_cal_derivative', false, ...
         @(x)validateattributes(x, {'logical'}, {'scalar'}));
+    ip.addParameter('is_log', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.parse(varargin{:});
     ip = ip.Results;
 
-    N = max(abs(n));
+    M = max(abs(m));
 
-    n_full = (0:N).';
+    n_full = (0:M).';
     z_row0 = z(:).';
     [z_row, ~, idx_z_row] = unique(z_row0);
 
@@ -35,32 +37,36 @@ function [H, H_prime] = HankelHLog(n, z, varargin)
     z_large = z_row(idx_z_large);
 
     if sum(idx_z_small(:)) > 0
-        H(:,idx_z_small) = HankelHLog_Rothwell(N, z_small, 'nu0', ip.nu0, ...
+        H(:,idx_z_small) = HankelHLog_Rothwell(M, z_small, 'nu0', ip.nu0, ...
             'kind', ip.kind);
     end
     if sum(idx_z_large(:)) > 0
         H(:,idx_z_large) = HankelH_Asym(n_full+ip.nu0, z_large, ...
-            'approx_order', N+5, 'is_log', true, 'kind', ip.kind);
+            'approx_order', M+5, 'is_log', true, 'kind', ip.kind);
     end
     if ip.is_cal_derivative
-        [~, H_prime] = HankelHLog_Rothwell(N, z_row, 'nu0', ip.nu0, ...
+        [~, H_prime] = HankelHLog_Rothwell(M, z_row, 'nu0', ip.nu0, ...
             'kind', ip.kind, 'is_cal_derivative', ip.is_cal_derivative);
     end
     
     H = H(:, idx_z_row);
-    H = H(abs(n)+1, :);
+    H = H(abs(m)+1, :);
     if ip.is_cal_derivative
-        H_prime = H_prime(abs(n)+1, :);
+        H_prime = H_prime(abs(m)+1, :);
     end
-    if ~isempty(n(n<0))
-        H(n<0,:) = H(n<0, :) + log(-1) .* n(n<0);
+    if ~isempty(m(m<0))
+        H(m<0,:) = H(m<0, :) + log(-1) .* m(m<0);
         if ip.is_cal_derivative
-            H_prime(n<0,:) = H_prime(n<0, :) + log(-1) .* n(n<0);
+            H_prime(m<0,:) = H_prime(m<0, :) + log(-1) .* m(m<0);
         end
     end
-    H = reshape(H, size(n .* z));
+    H = reshape(H, size(m .* z));
     if ip.is_cal_derivative
-        H_prime = reshape(H_prime, size(n .* z));
+        H_prime = reshape(H_prime, size(m .* z));
+    end
+
+    if ~ip.is_log
+        H = exp(H);
     end
 end
 

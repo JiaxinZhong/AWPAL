@@ -13,7 +13,7 @@ function j = SphBesselJ(n, z, varargin)
 
     validateattributes(n, {'numeric'}, {'>=', 0});
 
-    CheckDim('preceeding', n, z);
+    CheckDim('preceding', n, z);
 
     ip = inputParser;
 %     ip.addParameter('z_large', 1e3);

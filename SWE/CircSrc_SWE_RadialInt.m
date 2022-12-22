@@ -18,7 +18,7 @@
 %   - 1: n (order)
 %   - 2 ~ N: r1 .* r2 .* r
 % =========================================================================
-function int = CircSrc_SWE_Int(src, n, sph, r1, r2, r, varargin)
+function int = CircSrc_SWE_RadialInt(src, n, sph, r1, r2, r, varargin)
 
     validateattributes(n, {'numeric'}, {'column'});
     validatestring(sph, {'j', 'h'});
@@ -29,11 +29,11 @@ function int = CircSrc_SWE_Int(src, n, sph, r1, r2, r, varargin)
     ip = inputParser;
     ip.addParameter('int_num', []);
     ip.addParameter('is_log', false);
+    ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     % normalization 
     parse(ip, varargin{:});
     ip = ip.Results;
 
-    k = src.wav.num;
     a = src.radius;
 
     % to ensure the convergence at 40 kHz
@@ -50,7 +50,7 @@ function int = CircSrc_SWE_Int(src, n, sph, r1, r2, r, varargin)
     [n_unique, ~, idx] = unique(n);
 
     int = GaussLegendreQuad(@(rs) ...
-        Integrand(src, n_unique, sph, rs, r), ...
+        Integrand(src, n_unique, sph, rs, r, ip.is_farfield), ...
         r1, r2, 'int_num', ip.int_num, 'is_log', true, 'dim', 10);
     int = int(idx, :, :, :, :, :, :);
     if ~ip.is_log
@@ -58,17 +58,18 @@ function int = CircSrc_SWE_Int(src, n, sph, r1, r2, r, varargin)
     end
 end
 
-function int = Integrand(src, n, sph, rs, r)
+function int = Integrand(src, n, sph, rs, r, is_farfield)
     u = src.CalProfile(rs);
     switch sph
         case 'j'
             int = log(u) + 2*log(src.wav.num) + log(rs) ...
-                + SphBesselJLog(n, src.wav.num*rs) ...
-                + SphHankelHLog(n, src.wav.num*r);
+                + SphBesselJ(n, src.wav.num*rs, 'is_log', true) ...
+                + SphHankelH(n, src.wav.num*r, 'is_log', true, ...
+                'arg_is_large', is_farfield);
         case 'h'
             int = log(u) + 2*log(src.wav.num) + log(rs) ...
-                + SphBesselJLog(n, src.wav.num*r) ...
-                + SphHankelHLog(n, src.wav.num*rs);
+                + SphBesselJ(n, src.wav.num*r, 'is_log', true) ...
+                + SphHankelH(n, src.wav.num*rs, 'is_log', true);
         otherwise
             error('Wrong spherical functions!')
     end

@@ -22,7 +22,7 @@
 %   - 6: l2
 %   - 7: rv
 % =========================================================================
-function R = PalCircSrc_SWE_Int(pal, la, l1_max, l2_max, r1, r2, r, sph, varargin)
+function R = PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r1, r2, r, sph, varargin)
 
 %     validateattributes(r1, {'numeric'}, {'column'});
 %     validateattributes(r2, {'numeric'}, {'column'});
@@ -33,6 +33,8 @@ function R = PalCircSrc_SWE_Int(pal, la, l1_max, l2_max, r1, r2, r, sph, varargi
     ip.addParameter('int_method', 'direct', @(x)any(validatestring(x, {'direct', 'steepest_descent'})));
     % number of points for the numerical integration
     ip.addParameter('int_num', 3e2, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
+    % true: The spherical Hankel function is calculated using the limiting
+    %   form at large arguments
     ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     % is_log = true: return the logarithm of the result
     ip.addParameter('is_log', false);
@@ -44,11 +46,11 @@ function R = PalCircSrc_SWE_Int(pal, la, l1_max, l2_max, r1, r2, r, sph, varargi
     switch ip.int_method
         case 'direct'
             R = GaussLegendreQuad(@(rv) ...
-                Integrand(pal, sph, rv, r, la, l1_max, l2_max), ...
+                Integrand(pal, sph, rv, r, la, l1_max, l2_max, ip.is_farfield), ...
                 r1, r2, 'int_num', ip.int_num, 'is_log', true, 'dim', 7);
         case 'steepest_descent'
             R = GaussLegendreQuad(@(rv) ...
-                Integrand(pal, sph, r1+1i*rv, r, la, l1_max, l2_max), ...
+                Integrand(pal, sph, r1+1i*rv, r, la, l1_max, l2_max, ip.is_farfield), ...
                 0, inf, 'int_num', ip.int_num, 'is_log', true, 'dim', 7);
         otherwise
             error("Wrong integration methods!");
@@ -57,30 +59,15 @@ function R = PalCircSrc_SWE_Int(pal, la, l1_max, l2_max, r1, r2, r, sph, varargi
         R = exp(R);
     end
 
-    % dim: la -> 1 -> 1 -> 1 -> -> 1 -> rv
-    % j = SphBesselJLog(2*la(:)+abs(ma), ka .* rv);
-    % dim: 1 -> 1 -> 1 -> la -> 1 -> 1 -> rv
-    % j = permute(j, [4,2,3,1,5,6,7]);
-    % if ip.is_farfield
-        % h = 1i*ka*r - log(1i.^(2*la+abs(ma)) .* ka .* r);
-    % else
-        % % dim: la -> r
-        % h = SphHankelHLog(2*la(:)+abs(ma), ka .* r.');
-        % h = permute(permute(h, [4,2,3,1]), [2,1,3,4]);
-    % end
-
-    % jh = exp(j + h);
-    % jh(isinf(jh)) = 0;
-    % R = sum(conj(R1) .* R2 .* jh .* ka^3 .* rv.^2 .* weight, 7);
 end
 
-function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max)
+function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max, is_farfield)
     m1 = pal.src_low.prf.azimuth_order;
     m2 = pal.src_high.prf.azimuth_order;
     ma = m2 - m1;
 
     tt = tic;
-    int_num = 5e2;
+    int_num = 2e2;
     % dim: r .* rv -> 1 -> 1 -> l1
     R1 = CircSrc_SWE_Radial(...
         pal.src_low, rv(:), l1_max, ...
@@ -116,12 +103,18 @@ function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max)
         otherwise
             error('Wrong spherical functions!')
     end
+    if is_farfield
+        H = SphHankelH_Asym(2*la+abs(ma), ...
+            pal.audio.num*permute(rh, [6,2,3,4,5,1,7]), ...
+            'is_log', true, 'approx_order', 0);
+    else
+        H = SphHankelH(2*la+abs(ma), ...
+            pal.audio.num*permute(rh, [6,2,3,4,5,1,7]), ...
+            'is_log', true);
+    end
     int = int ...
         + permute(SphBesselJ(2*la+abs(ma), ...
         pal.audio.num*permute(rj, [6,2,3,4,5,1,7]), ...
-        'is_log', true) ...
-        + SphHankelH(2*la+abs(ma), ...
-        pal.audio.num*permute(rh, [6,2,3,4,5,1,7]), ...
-        'is_log', true), ...
+        'is_log', true) + H, ...
         [6,2,3,4,5,1,7]);
 end

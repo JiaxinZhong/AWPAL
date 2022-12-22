@@ -8,7 +8,7 @@
 
 function J = BesselJLog(n, z, varargin)
 
-    CheckDim('preceeding', n, z);
+    CheckDim('preceding', n, z);
 
     ip = inputParser;
     ip.addParameter('z_large', 1e3);

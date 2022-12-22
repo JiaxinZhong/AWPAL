@@ -18,8 +18,9 @@
 function [prs, vel] = CircSrc_SWE(src, fp, varargin)
 
     ip = inputParser();
-    ip.addParameter('gauss_num', 2e2, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
+    ip.addParameter('int_num', 2e2, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
     ip.addParameter('is_cal_vel', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
+    ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.addParameter('max_order', ceil(src.radius*real(src.wav.num)*1.2), ...
         @(x)validateattributes(x, {'numeric'}, {'scalar', '>', 0}));
     ip.parse(varargin{:});
@@ -41,31 +42,11 @@ function [prs, vel] = CircSrc_SWE(src, fp, varargin)
     Y = permute(permute(permute(Y, [1,3,2,4]), [1,2,4,3]), [4,2,3,1]);
 
     %% Calculate radial components
-    R = CircSrc_SWE_Radial(src, fp.r, ip.max_order);
+    R = CircSrc_SWE_Radial(src, fp.r, ip.max_order, ...
+        'int_num', ip.int_num, ...
+        'is_farfield', ip.is_farfield);
 
     %% Calculate the sound pressure
-
-    % r_exterior = r(r>=a);
-    % r_interior = r(r<a);
-    % radial_interior = [];
-    % radial_exterior = [];
-    % r, n => r, [], [], n
-    % if ~isempty(r_interior)
-        % radial_interior = permute(...
-                % CircSrcZernikeRadial_Interior_220416A(...
-                % k, a, r_interior, max_l, n0, abs(m0), ...
-                % 'gauss_num', ip.gauss_num), ...
-                % [1,4,3,2]);
-    % end
-    % if ~isempty(r_exterior)
-        % radial_exterior = permute(...
-            % CircSrcZernikeRadial_Exterior_220413A(...
-            % k, a, r_exterior, max_l, n0, abs(m0), ...
-            % 'gauss_num', ip.gauss_num), ...
-            % [1,4,3,2]);
-    % end
-    % radial = [radial_interior; radial_exterior];
-
     p0 = 1.21*343;
     
     prs = 4*pi*p0 * sum(Y0 .* Y .* R, 4);

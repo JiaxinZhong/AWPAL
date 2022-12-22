@@ -13,6 +13,8 @@ function h = SphHankelHLog(n, z, varargin)
 
     ip = inputParser;
 %     ip.addParameter('z_large', 1e3);
+    % Using the limiting form when the argument is very large
+    ip.addParameter('arg_is_large', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.parse(varargin{:});
     ip = ip.Results;
 
@@ -22,7 +24,9 @@ function h = SphHankelHLog(n, z, varargin)
     z_row0 = z(:).';
     [z_row, ~, idx_z_row] = unique(z_row0);
 
-    h = HankelHLog(n_full, z_row, 'nu0', .5) + 1/2 .* log(pi./2./z_row);
+    h = HankelH(n_full, z_row, 'nu0', .5, 'is_log', true, ...
+        'arg_is_larg', ip.arg_is_large) ...
+        + 1/2 .* log(pi./2./z_row);
 
 %     h(1,z_row==0) = log(1);
 %     h(2:end, z_row == 0) = log(0);

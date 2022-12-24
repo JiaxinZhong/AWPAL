@@ -15,7 +15,7 @@
 %   - 1: m
 %   - 2~N: rho1 .* rho2 .* rho
 % =========================================================================
-function int = LineSrc_CWE_Int(src, m, cyl, rho1, rho2, rho, varargin)
+function int = LineSrc_CWE_RadialInt(src, m, cyl, rho1, rho2, rho, varargin)
 
     validateattributes(m, {'numeric'}, {'column'});
     validatestring(cyl, {'J', 'H'});
@@ -49,7 +49,9 @@ function int = LineSrc_CWE_Int(src, m, cyl, rho1, rho2, rho, varargin)
 
     [rho_src, weight] = GaussLegendreQuadParam(ip.int_num, rho1, rho2, 'dim', 7);
 
-    u = (src.CalProfile(rho_src) + (-1).^m_abs_unique .* src.CalProfile(-rho_src))/2; 
+%     u = (src.CalProfile(rho_src) + (-1).^m_abs_unique .* src.CalProfile(-rho_src))/2; 
+    u = (1i.^(-m_abs_unique) .* src.CalProfile(rho_src) + 1i.^(m_abs_unique) .* src.CalProfile(-rho_src))/2; 
+     
     switch cyl
         case 'J'
             if ip.is_farfield
@@ -59,12 +61,12 @@ function int = LineSrc_CWE_Int(src, m, cyl, rho1, rho2, rho, varargin)
             else
                 int = log(u) + log(k) ...
                     + BesselJLog(m_abs_unique, k*rho_src) ...
-                    + HankelHLog(m_abs_unique, k*rho);
+                    + HankelH(m_abs_unique, k*rho, 'is_log', true);
             end
         case 'H'
             int = log(u) + log(k) ...
                 + BesselJLog(m_abs_unique, k*rho) ...
-                + HankelHLog(m_abs_unique, k*rho_src);
+                + HankelH(m_abs_unique, k*rho_src, 'is_log', true);
         otherwise
             error('Wrong cylinder functions!')
     end
@@ -73,13 +75,14 @@ function int = LineSrc_CWE_Int(src, m, cyl, rho1, rho2, rho, varargin)
 %         Integrand(src, m_abs_unique, k, cyl, rho_src, rho), ...
 %         rho1, rho2, 'int_num', ip.int_num, 'is_log', true, 'dim', 10);
     int = int(idx, :, :, :, :, :, :);
+    int(m<0, :, :, :, :, :, :) = int(m<0, :, :, :, :, :, :) .* (-1).^(m(m<0));
 %     if ~ip.is_log
 %         int = exp(int);
 %     end
 end
 
 function int = Integrand(src, m, k, cyl, rho_src, rho)
-    u = (src.CalProfile(rho_src) + (-1).^m .* src.CalProfile(-rho_src))/2; 
+    u =  (src.CalProfile(rho_src) + (-1).^m .* src.CalProfile(-rho_src))/2; 
     switch cyl
         case 'J'
             int = log(u) + log(k) ...

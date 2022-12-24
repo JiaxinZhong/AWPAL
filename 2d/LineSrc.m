@@ -35,14 +35,15 @@ classdef LineSrc < handle
             obj.prf = ip.prf;
         end
 
-        function u = CalProfile(obj, xs)
+        function u = CalProfile(obj, ys)
             a = obj.radius;
-            k = obj.wav.num;
+            k = real(obj.wav.num);
             switch obj.prf.name
                 case 'uniform'
                     u = 1;
                 case 'steerable'
-                    u = exp(1i*k*xs.*cos(obj.prf.phi));
+                    % u = exp(1i*k*xs.*cos(obj.prf.phi));
+                    u = exp(1i*k*ys.*sin(obj.prf.phi));
                 case 'cosine'
                     u = (cos(pi*xs/2./a)).^obj.prf.order / 2 * pi;
                 case 'cosine_steerable'

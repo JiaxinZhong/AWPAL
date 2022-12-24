@@ -14,6 +14,11 @@ fp.Sph2Cart();
 prs = PalCircSrc_SWE(pal, fp, 'la_max', 100, 'is_farfield', false);
 spl = PrsToSpl(prs);
 
+plot(angle/pi*180, spl_show);
+xlabel('z (m)')
+ylabel('SPL (dB)')
+
+
 angle = [-flip(fp.theta(:)); fp.theta(:)];
 spl_show = [flip(spl(:,:,2)), spl(:,:,1)];
 % normalization
@@ -21,7 +26,3 @@ spl_show = spl_show(:) - max(spl_show(:));
 
 %% Directivity
 fig = Figure;
-plot(angle/pi*180, spl_show);
-xlabel('z (m)')
-ylabel('SPL (dB)')
-

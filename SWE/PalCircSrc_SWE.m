@@ -43,7 +43,8 @@ function prs = PalCircSrc_SWE(pal, fp, varargin)
     time0 = tic;
     if ~ip.is_mute
         fprintf("====================Running PalCircSrc_SWE.m====================\n");
-        fprintf("Ultrasound frequencies: %d Hz and %d Hz\n", pal.ultra_low.freq, pal.ultra_high.freq);
+        fprintf("Ultrasound frequencies: %d Hz and %d Hz\n", ...
+            pal.ultra_low.freq, pal.ultra_high.freq);
         fprintf("Audio frequency: %d Hz\n", pal.audio.freq);
     end
 

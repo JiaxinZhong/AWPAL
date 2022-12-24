@@ -4,26 +4,27 @@
 %       the cylindrical wave expansion (CWE) method
 % -------------------------------------------------------------------------
 % INPUT
-%   - k: wavenumber
-%   - a: half-width (radius) of the source
-%   - rho: the polar coodinates 
-%   - phi: the azmimuthal coordinates
+%   - src: data of the circular source 
+%   - fp.rho, fp.phi: the radial and azimuthal coordinates of the field 
+%       points
 % DIMEINSION
 %   - 1: fp.rho
 %   - 2: fp.phi
 %   - 3: order
 % =========================================================================
-function [prs, vel_rho, vel_phi, lag] = LineSrc_CWE(src, fp, varargin)
+function [prs, vel, lag] = LineSrc_CWE(src, fp, varargin)
 
     ip = inputParser;
     % maximum order
-    ip.addParameter('m_max', 100);
+    ip.addParameter('m_max', ceil(src.radius*real(src.wav.num)*1.2), ...
+        @(x)validateattributes(x, {'numeric'}, {'scalar', '>', 0}));
     ip.addParameter('src_norm', 'prs', @(x)any(validatestring(x, ...
         {'prs', 'vel', 'surf_vel'})));
     ip.addParameter('is_cal_vel', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
+    % Calculate Lagrangian density
     ip.addParameter('is_cal_lag', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.addParameter('is_farfield', false)
-%     ip.addParameter('array', []);
+    ip.addParameter('int_num', 2e2, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
     ip.parse(varargin{:});
     ip = ip.Results;
 
@@ -36,7 +37,8 @@ function [prs, vel_rho, vel_phi, lag] = LineSrc_CWE(src, fp, varargin)
     % radial component
     [R, R_prime] = LineSrc_CWE_Radial(...
         src, fp.rho, ip.m_max, ...
-        'int_num', 5e2, 'is_farfield', ip.is_farfield);
+        'int_num', 2e2, ...
+        'is_farfield', ip.is_farfield);
 
     psi = exp(1i .* m .* fp.phi);
 
@@ -58,8 +60,8 @@ function [prs, vel_rho, vel_phi, lag] = LineSrc_CWE(src, fp, varargin)
     % res.u_phase = radial_data.u_phase;
     % res.rho_phase = radial_data.rho_phase;
 
-    vel_rho = nan;
-    vel_phi = nan;
+    vel.rho = nan;
+    vel.phi = nan;
     lag = nan;
 
     %% calculate the velocity
@@ -67,14 +69,14 @@ function [prs, vel_rho, vel_phi, lag] = LineSrc_CWE(src, fp, varargin)
         return
     end
 
-    vel_rho = ampl / (1i * rho0 * c0) * sum(neumann .* R_prime .* psi, 3);
-    vel_phi = ampl * 1i / (rho0 * c0) * sum(neumann .* m ...
+    vel.rho = ampl / (1i * rho0 * c0) * sum(neumann .* R_prime .* psi, 3);
+    vel.phi = ampl * 1i / (rho0 * c0) * sum(neumann .* m ...
         .* R ./ (k .* rho) .* sin(m .* phi), 3);
     idx_rho = (rho + 0*phi) == 0;
-    vel_phi(idx_rho) = 0;
+    vel.phi(idx_rho) = 0;
 
     if ~ip.is_cal_lag
         return
     end
-    lag = rho0/2 * (abs(vel_rho).^2 + abs(vel_phi).^2) - abs(prs).^2 / (2*rho0*c0^2);
+    lag = rho0/2 * (abs(vel.rho).^2 + abs(vel.phi).^2) - abs(prs).^2 / (2*rho0*c0^2);
 end

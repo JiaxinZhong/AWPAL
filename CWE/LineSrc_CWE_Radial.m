@@ -47,7 +47,7 @@ function [R, R_prime] = LineSrc_CWE_Radial(src, rho, m_max, varargin)
 
     if ip.is_farfield
         % dim: m => rho
-        int = LineSrc_CWE_Int(src, m(:), 'J', 0, a, rho.', ...
+        int = LineSrc_CWE_RadialInt(src, m(:), 'J', 0, a, rho.', ...
             'is_farfield', ip.is_farfield);
         R = permute(permute(int, [3,2,1]), [2,1,3]);
         return
@@ -69,22 +69,22 @@ function [R, R_prime] = LineSrc_CWE_Radial(src, rho, m_max, varargin)
     %% process origin points
     if ~isempty(rho_origin)
         % dim: m => rho_origin
-        int = LineSrc_CWE_Int(src, m(:), 'H', 0, a, rho_origin.');
+        int = LineSrc_CWE_RadialInt(src, m(:), 'H', 0, a, rho_origin.');
         R(idx_origin, :, :) = permute(permute(int, [3,2,1]), [2,1,3]);
     end
 
     %% process interior points
     if ~isempty(rho_int)
         % dim: m => rho_origin
-        int = LineSrc_CWE_Int(src, m(:), 'J', 0, rho_int.', rho_int.') ...
-            + LineSrc_CWE_Int(src, m(:), 'H', rho_int.', a, rho_int.');
+        int = LineSrc_CWE_RadialInt(src, m(:), 'J', 0, rho_int.', rho_int.') ...
+            + LineSrc_CWE_RadialInt(src, m(:), 'H', rho_int.', a, rho_int.');
         R(idx_int, :, :) = permute(permute(int, [3,2,1]), [2,1,3]);
     end
 
     %% process exterior points
     if ~isempty(rho_ext)
         % dim: m => rho_origin
-        int = LineSrc_CWE_Int(src, m(:), 'J', 0, a, rho_ext.');
+        int = LineSrc_CWE_RadialInt(src, m(:), 'J', 0, a, rho_ext.');
         R(idx_ext, :, :) = permute(permute(int, [3,2,1]), [2,1,3]);
     end
 

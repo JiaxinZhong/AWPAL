@@ -16,7 +16,7 @@ function R = PalCircSrc_SWE_Radial(pal, r, la_max, l1_max, l2_max, varargin)
 
     ip = inputParser;
     % number of points for the numerical integration
-    ip.addParameter('int_num', 2e3, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
+%     ip.addParameter('int_num', 2e3, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
     ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     parse(ip, varargin{:});
     ip = ip.Results;
@@ -27,28 +27,31 @@ function R = PalCircSrc_SWE_Radial(pal, r, la_max, l1_max, l2_max, varargin)
     l1 = permute((0:l1_max).', [5,2,3,4,1]);
     l2 = permute((0:l2_max).', [6,2,3,4,5,1]);
 
-    % origin points
-    idx_origin = r == 0;
-    r_origin = r(idx_origin);
-    % interior points
-    idx_int = (r > 0) & (r < a);
-    r_int = r(idx_int);
-    % exterior points
-    idx_ext = r >= a;
-    r_ext = r(idx_ext);
-
-    R = 0 * r .* la .* l1 .* l2;
     if ip.is_farfield
         % the partition for r can be modified per specific parameters
 %         r_part = [0; 1; 2; 5; 10; 20; 50; 100; 200; 1e3; inf]*a;
-%         r_part = [0; 0.3; .5; 1; 1.5; 2; 5; 10; 15; 20; 30; 40; 50; 100; 200; 500; 1e3; inf]*a;
-        r_part = [0; 0.5*a; 0.9*a; a; .5; 1; 2; 3; 4; 5; 7; 10; 15; 20; 25; 30; 40; 50; 52; 55; 70; 100; 150; 200; 300; 500; inf];
+        r_part = [0; 0.3; .5; 1; 1.5; 2; 5; 10; 15; 20; 30; 40; 50; 100; 200; 500; 1e3; inf]*a;
+%         r_part = [0; 0.3*a; 0.5*a; 0.9*a; a; .3; .5; 1; 1.5; 2; 2.5; 3;3.5; 4; 4.5;5;
+%             6; 7; 8; 9; 10; 12; 15; 17; 20; 25; 30; 40; 50; 52; 55; 70; 100; 150; 200; 300; 500; inf];
+        R = 0;
         for i = 1:length(r_part)-1
             R = R + PalCircSrc_SWE_RadialInt(...
                 pal, la, l1_max, l2_max, r_part(i), r_part(i+1), r, 'j', ...
                 'is_farfield', true, 'int_num', 5e2);
         end
     else 
+        % origin points
+        idx_origin = r == 0;
+        r_origin = r(idx_origin);
+        % interior points
+        idx_int = (r > 0) & (r < a);
+        r_int = r(idx_int);
+        % exterior points
+        idx_ext = r >= a;
+        r_ext = r(idx_ext);
+
+        R = 0 * r .* la .* l1 .* l2;
+    
         % process origin points
         if ~isempty(r_origin)
             R(idx_origin, 1, 1, :, :, :) ...
@@ -80,7 +83,8 @@ function R = PalCircSrc_SWE_Radial(pal, r, la_max, l1_max, l2_max, varargin)
 %                 + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r_ext+5, inf, r_ext, 'h');
             R(idx_ext, 1, 1, :, :, :) ...
                 = PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, 0, a, r_ext, 'j') ...
-                + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, a, r_ext/10, r_ext, 'j') ...
+                + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, a, r_ext/20, r_ext, 'j') ...
+                + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r_ext/20, r_ext/10, r_ext, 'j') ...
                 + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r_ext/10, r_ext/5, r_ext, 'j') ...
                 + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r_ext/5, r_ext/2, r_ext, 'j') ...
                 + PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r_ext/2, r_ext, r_ext, 'j') ...

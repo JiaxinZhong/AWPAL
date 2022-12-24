@@ -25,7 +25,7 @@ classdef SrcProfile < handle
             obj.order = ip.order;
             obj.theta = ip.theta;
             obj.phi = ip.phi;
-            obj.phi = ip.degree;
+            obj.degree = ip.degree;
         end
     end
 end

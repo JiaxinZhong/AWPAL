@@ -23,7 +23,7 @@ function [prs, vel, lag] = LineSrc_CWE(src, fp, varargin)
     ip.addParameter('is_cal_vel', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     % Calculate Lagrangian density
     ip.addParameter('is_cal_lag', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
-    ip.addParameter('is_farfield', false)
+    ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.addParameter('int_num', 2e2, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
     ip.parse(varargin{:});
     ip = ip.Results;
@@ -37,7 +37,7 @@ function [prs, vel, lag] = LineSrc_CWE(src, fp, varargin)
     % radial component
     [R, R_prime] = LineSrc_CWE_Radial(...
         src, fp.rho, ip.m_max, ...
-        'int_num', 2e2, ...
+        'int_num', ip.int_num, ...
         'is_farfield', ip.is_farfield);
 
     psi = exp(1i .* m .* fp.phi);

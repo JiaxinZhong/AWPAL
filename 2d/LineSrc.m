@@ -63,44 +63,44 @@ classdef LineSrc < handle
         end
 
         function dir = CalDirectivity(obj, phi)
-            kx = real(obj.wav.num) .* cos(phi);
+            ky = real(obj.wav.num) .* sin(phi);
             switch obj.prf.name
                 case 'uniform'
-                    dir = sinc(kx .* obj.radius/pi);
+                    dir = sinc(ky .* obj.radius/pi);
                 case 'steerable'
-                    dir = sinc((kx - real(obj.wav.num) .* cos(obj.prf.phi)) .* obj.radius/pi);
+                    dir = sinc((ky - real(obj.wav.num) .* sin(obj.prf.phi)) .* obj.radius/pi);
                 case 'cosine'
                     switch obj.prf.order
                         case 1
-                            dir = 2*obj.radius .* cos(kx.*obj.radius) ./ (1 - (2*kx.*obj.radius/pi).^2);
+                            dir = 2*obj.radius .* sin(ky.*obj.radius) ./ (1 - (2*ky.*obj.radius/pi).^2);
                         case 2
-                            dir = 2*sinc(kx .* obj.radius/pi) ...
-                                + (sinc(kx*obj.radius/pi + 1) + sinc(kx.*obj.radius/pi-1));
+                            dir = 2*sinc(ky .* obj.radius/pi) ...
+                                + (sinc(ky*obj.radius/pi + 1) + sinc(ky.*obj.radius/pi-1));
                         otherwise
                             error('Wrong cosine type!')
                     end
                 case 'cosine_steerable'
-                    kx = kx - real(obj.wav.num) .* cos(obj.prf.phi);
+                    ky = ky - real(obj.wav.num) .* cos(obj.prf.phi);
                     switch obj.prf.order
                         case 1
-                            dir = 2*obj.radius .* cos(kx.*obj.radius) ./ (1 - (2*kx.*obj.radius/pi).^2);
+                            dir = 2*obj.radius .* cos(ky.*obj.radius) ./ (1 - (2*ky.*obj.radius/pi).^2);
                         case 2
-                            dir = 2*sinc(kx .* obj.radius/pi) ...
-                                + (sinc(kx*obj.radius/pi + 1) + sinc(kx.*obj.radius/pi-1));
+                            dir = 2*sinc(ky .* obj.radius/pi) ...
+                                + (sinc(ky*obj.radius/pi + 1) + sinc(ky.*obj.radius/pi-1));
                         otherwise
                             error('Wrong cosine type!')
                     end
                 case 'hanning'
-                    dir = sinc(kx.*obj.radius/pi) ./ (1-(kx.*obj.radius/pi).^2);
+                    dir = sinc(ky.*obj.radius/pi) ./ (1-(ky.*obj.radius/pi).^2);
                 case 'hamming'
-                    dir = sinc(kx.*obj.radius/pi) .* (1.08 - 0.16*(kx.*obj.radius/pi).^2) ...
-                        ./ (1-(kx.*obj.radius/pi).^2) / 1.08;
+                    dir = sinc(ky.*obj.radius/pi) .* (1.08 - 0.16*(ky.*obj.radius/pi).^2) ...
+                        ./ (1-(ky.*obj.radius/pi).^2) / 1.08;
                 case 'blackman'
-                    dir = sinc(kx.*obj.radius/pi) .* (0.84 + (kx.*obj.radius/pi).^2 ...
-                        ./ (1 - (kx.*obj.radius/pi).^2) - .16.*(kx.*obj.radius/2/pi).^2 ...
-                        ./ (1 - (kx.*obj.radius/2/pi).^2)) / 0.84;
+                    dir = sinc(ky.*obj.radius/pi) .* (0.84 + (ky.*obj.radius/pi).^2 ...
+                        ./ (1 - (ky.*obj.radius/pi).^2) - .16.*(ky.*obj.radius/2/pi).^2 ...
+                        ./ (1 - (ky.*obj.radius/2/pi).^2)) / 0.84;
                 case 'triangular'
-                    dir = (sinc(kx.*obj.radius/2/pi)).^2;
+                    dir = (sinc(ky.*obj.radius/2/pi)).^2;
                 otherwise
                     error('Wrong profile type!')
             end

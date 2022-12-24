@@ -24,7 +24,7 @@ function int = LineSrc_CWE_RadialInt(src, m, cyl, rho1, rho2, rho, varargin)
     validateattributes(rho, {'numeric'}, {'size', [1, nan, nan, nan, nan]});
     
     ip = inputParser;
-    ip.addParameter('int_num', nan);
+    ip.addParameter('int_num', []);
     ip.addParameter('is_log', false);
     ip.addParameter('is_farfield', false)
     parse(ip, varargin{:});
@@ -34,7 +34,7 @@ function int = LineSrc_CWE_RadialInt(src, m, cyl, rho1, rho2, rho, varargin)
     a = src.radius;
 
     % to ensure the convergence at 40 kHz
-    if isnan(ip.int_num)
+    if isempty(ip.int_num)
         if a < 0.2
             ip.int_num = 1e2;
         elseif a < 0.3
@@ -56,16 +56,17 @@ function int = LineSrc_CWE_RadialInt(src, m, cyl, rho1, rho2, rho, varargin)
         case 'J'
             if ip.is_farfield
                 int = log(u) + log(k) ...
-                    + BesselJLog(m_abs_unique, k*rho_src) ...
-                    + 1i*k*rho + log(sqrt(2./(k*rho.*1i*pi))./1i.^m_abs_unique);
+                    + BesselJ(m_abs_unique, k*rho_src, 'is_log', true) ...
+                    + HankelH(m_abs_unique, k*rho, 'is_log', true, 'arg_is_large', ip.is_farfield);
+                    % + 1i*k*rho + log(sqrt(2./(k*rho.*1i*pi))./1i.^m_abs_unique);
             else
                 int = log(u) + log(k) ...
-                    + BesselJLog(m_abs_unique, k*rho_src) ...
+                    + BesselJ(m_abs_unique, k*rho_src, 'is_log', true) ...
                     + HankelH(m_abs_unique, k*rho, 'is_log', true);
             end
         case 'H'
             int = log(u) + log(k) ...
-                + BesselJLog(m_abs_unique, k*rho) ...
+                + BesselJ(m_abs_unique, k*rho, 'is_log', true) ...
                 + HankelH(m_abs_unique, k*rho_src, 'is_log', true);
         otherwise
             error('Wrong cylinder functions!')

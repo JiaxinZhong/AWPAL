@@ -6,9 +6,9 @@
 %       - r> = max(r, rv)
 % -------------------------------------------------------------------------
 % INPUT
-%   - sph: the kernel. spherical function type 'j' or 'h'
-%       - 'j':  hn(kr) * int_r1^r2 u(rs) j_n(k rs) k drs
-%       - 'h':  jn(kr) * int_r1^r2 u(rs) j_n(k rs) k drs
+%   - sph: the kernel function type 'j' or 'h'
+%       - 'j':  hn(kr) * int_r1^r2 ... h_n(k rv) drv
+%       - 'h':  jn(kr) * int_r1^r2 ... j_n(k rv) drv
 %   - r1: the lower limit of the integral
 %   - r2: the upeer limit of the integral
 %   - r: the argument of the function outside the integral
@@ -37,12 +37,10 @@ function R = PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r1, r2, r, sph, v
     %   form at large arguments
     ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     % is_log = true: return the logarithm of the result
-    ip.addParameter('is_log', false);
+    ip.addParameter('is_log', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     parse(ip, varargin{:});
     ip = ip.Results;
 
-%     ka = pal.audio.num;
-    
     switch ip.int_method
         case 'direct'
             R = GaussLegendreQuad(@(rv) ...
@@ -58,7 +56,6 @@ function R = PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r1, r2, r, sph, v
     if ~ip.is_log
         R = exp(R);
     end
-
 end
 
 function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max, is_farfield)
@@ -67,11 +64,8 @@ function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max, is_farfield)
     ma = m2 - m1;
 
     tt = tic;
-    int_num = 2e2;
-    % dim: r .* rv -> 1 -> 1 -> l1
-    R1 = CircSrc_SWE_Radial(...
-        pal.src_low, rv(:), l1_max, ...
-        'int_num', int_num);
+    % dim: r .* rv -> 1 -> l1
+    R1 = CircSrc_SWE_Radial(pal.src_low, rv(:), l1_max);
     % dim: r -> rv -> l1
     R1 = reshape(R1, [size(permute(rv, [1,7,3,4,5,6,2])), l1_max+1]);
     % dim: r -> 1 -> 1 -> 1 -> l1 -> 1 -> rv
@@ -81,9 +75,7 @@ function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max, is_farfield)
 
     tt = tic;
     % dim: r .* rv -> 1 -> 1 -> l2
-    R2 = CircSrc_SWE_Radial(...
-        pal.src_high, rv(:), l2_max, ...
-        'int_num', int_num);
+    R2 = CircSrc_SWE_Radial(pal.src_high, rv(:), l2_max);
     % dim: r -> rv -> l2
     R2 = reshape(R2, [size(permute(rv, [1,7,3,4,5,6,2])), l2_max+1]);
     % dim: r -> 1 -> 1 -> 1 -> -> 1 -> l2 -> rv
@@ -103,18 +95,13 @@ function int = Integrand(pal, sph, rv, r, la, l1_max, l2_max, is_farfield)
         otherwise
             error('Wrong spherical functions!')
     end
-    if is_farfield
-        H = SphHankelH_Asym(2*la+abs(ma), ...
-            pal.audio.num*permute(rh, [6,2,3,4,5,1,7]), ...
-            'is_log', true, 'approx_order', 0);
-    else
-        H = SphHankelH(2*la+abs(ma), ...
-            pal.audio.num*permute(rh, [6,2,3,4,5,1,7]), ...
-            'is_log', true);
-    end
     int = int ...
-        + permute(SphBesselJ(2*la+abs(ma), ...
+        + permute(...
+        SphBesselJ(2*la+abs(ma), ...
         pal.audio.num*permute(rj, [6,2,3,4,5,1,7]), ...
-        'is_log', true) + H, ...
+        'is_log', true) ...
+        + SphHankelH(2*la+abs(ma), ...
+        pal.audio.num*permute(rh, [6,2,3,4,5,1,7]), ...
+        'is_log', true, 'arg_is_large', is_farfield), ...
         [6,2,3,4,5,1,7]);
 end

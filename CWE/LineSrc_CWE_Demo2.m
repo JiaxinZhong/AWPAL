@@ -4,7 +4,7 @@ clear all
 % choose a profile
 prf = SrcProfile('name', 'uniform');
 % prf = SrcProfile('name', 'cosine', 'order', 1);
-% prf = SrcProfile('name', 'steerable', 'phi', -15/180*pi);
+prf = SrcProfile('name', 'steerable', 'phi', -15/180*pi);
 
 src = LineSrc('prf', prf, 'radius', 0.1, 'freq', 40e3);
 

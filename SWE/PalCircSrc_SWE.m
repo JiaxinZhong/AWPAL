@@ -2,18 +2,10 @@
 % INTRO
 %   - Calculate the radiation from a circular PAL with the Zernike mode
 %   - Method: spherical wave expansion (SWE) 
-%   - Modified based on PAL_SWE_220201A.m
 % -------------------------------------------------------------------------
 % INPUT
-%   - k, the wavenumber for audio sound
-%   - k1, k2, the wavenumber for ultrasound
-%   - a, the radius of the radiator
-%   - r, the radial coordinate
-%   - theta, the zenithal coordinate
-%   - phi, the azimuthal coordinate
-%   - n1, m1, Zernike mode for ultrasound 1
-%   - n2, m2, Zernike mode for ultrasound 2
-%   - max_l, maximum order for SWE
+%   - pal: infor about the pal
+%   - fp: field points
 % -------------------------------------------------------------------------
 % DIMENSION
 %   - 1: fp.r 
@@ -33,8 +25,8 @@ function prs = PalCircSrc_SWE(pal, fp, varargin)
     % Calculate the sound pressure using the inward extrapolated farfield pressure
 	ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     ip.addParameter('la_max', ceil(real(pal.audio.num)*pal.src_ultra.radius*30));
-    ip.addParameter('l1_max', ceil(real(pal.ultra_low.num)*pal.src_ultra.radius*2.2));
-    ip.addParameter('l2_max', ceil(real(pal.ultra_high.num)*pal.src_ultra.radius*2.2));
+    ip.addParameter('l1_max', ceil(real(pal.ultra_low.num)*pal.src_ultra.radius*1.2));
+    ip.addParameter('l2_max', ceil(real(pal.ultra_high.num)*pal.src_ultra.radius*1.2));
     % mute the displayed info
     ip.addParameter('is_mute', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
 	parse(ip, varargin{:});

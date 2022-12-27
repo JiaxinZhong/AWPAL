@@ -13,7 +13,7 @@ k2 = 2*pi*f2/c0 + 1i*AbsorpAttenCoef(f2);
 a = 0.05;
 
 %% The field points 
-rho = [linspace(0,0.2,8e1).'; linspace(0.2, 1.2, 1e2).'];
+rho = [linspace(0,0.2,8e1).'; linspace(0.2, 1.2,   1e2).'];
 phi = linspace(0, pi, 5e1);
 [x, y] = Polar2Cart(rho, phi);
 m1_max = 8e1;

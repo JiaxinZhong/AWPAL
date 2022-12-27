@@ -5,99 +5,87 @@
 % -------------------------------------------------------------------------
 % INPUT
 % DIMENSION
-%   - 1, 2: rho 
+%   - 1: rho 
+%   - 2: phi (holder)
 %   - 3: ma
 %   - 4: m1
 %   - 5: integration
 % =========================================================================
-function radial = PalLineSrc_CWE_Radial(...
-    pal, rho, varargin)
-
-    validateattributes(k1, {'numeric'}, {'scalar'});
-    validateattributes(k2, {'numeric'}, {'scalar'});
-    validateattributes(ka, {'numeric'}, {'scalar'});
-    validateattributes(a, {'numeric'}, {'scalar', '>=', 0});
-    validateattributes(rho, {'numeric'}, {'size', [nan,nan,1], '>=', 0});
+function R = PalLineSrc_CWE_Radial(...
+    pal, rho, ma_max, m1_max, varargin)
 
     ip = inputParser;
     % number of points for the numerical integration
-    ip.addParameter('int_num', 2e3, @(x)validateattributes(x, {'numeric'}, {'scalar', '>=', 2}));
-    ip.addParameter('profile', 'uniform', @(x)any(validatestring(x, {'uniform', 'steerable'})));
-    ip.addParameter('steer_angle', [pi/4;pi/2]);
-    % ip.addParameter('steer_angle_lower', pi/2);
-    % ip.addParameter('steer_angle_upper', pi/2);
     ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
-    ip.addParameter('ma_max', 3e1);
-    ip.addParameter('m1_max', 1e2);
-    ip.addParameter('array', []);
     parse(ip, varargin{:});
     ip = ip.Results;
 
-    k1 = pal.ultra_low.num;
-    k2 = pal.ultra_high.num;
-    ka = pal.audio.num;
     a = pal.src_low.radius;
+    ma = permute((-ma_max:ma_max).', [3,2,1]);
+    % m1 = permute((-m1_max:m1_max).', [4,2,3,1]);
 
-    [rho_vsrc, weight] = GaussLegendreQuadParam(ip.int_num, 0, inf);
-    rho_vsrc = permute(rho_vsrc, [5,2,3,4,1]);
-    weight = permute(weight, [5,2,3,4,1]);
-
-    ma = permute((-ip.ma_max:ip.ma_max).', [3,2,1]);
-    m1 = permute((-ip.m1_max:ip.m1_max).', [4,2,3,1]);
-
-    % rho = permute(rho, [3,2,1,4,5]);
-    R_m1 = 0 * rho_vsrc .* m1;
-    R_m1(:,:,:,ip.m1_max+1:end,:) = permute(...
-        LineSrc_CWE_Radial(...
-        ip.m1_max, k1, a, ...
-        permute(rho_vsrc, [5,2,3,4,1]), ...
-        'int_num', 3e2,...
-        'steer_angle', ip.steer_angle,...
-        'profile', ip.profile, ...
-        'array', ip.array), [5,2,3,4,1]);
-    R_m1(:,:,:,1:ip.m1_max,:) = R_m1(:,:,:,end:-1:ip.m1_max+2,:);
-    
-    R_m2 = 0 * rho_vsrc .* m1 .* ma;
-    R_m2_buf = permute(...
-        LineSrc_CWE_Radial(...
-        ip.m1_max + ip.ma_max, k2, a, ...
-        permute(rho_vsrc, [5,2,3,4,1]), ...
-        'int_num', 3e2,...
-        'steer_angle', ip.steer_angle,...
-        'profile', ip.profile, ...
-        'array', ip.array), [5,2,3,4,1]);
-    for i = -ip.ma_max : ip.ma_max
-        for j = -ip.m1_max : ip.m1_max
-            R_m2(1,1,i+ip.ma_max+1,j+ip.m1_max+1,:) ...
-                = R_m2_buf(1,1,abs(i+j)+1,1,:);
+    if ip.is_farfield
+        % the partition for r can be modified per specific parameters
+        rho_part = [0; 1; 2; 5; 10; 20; 50; 100; 200; 1e3; inf]*a;
+%         rho_part = [0; 0.3; .5; 1; 1.5; 2; 5; 10; 15; 20; 30; 40; 50; 100; 200; 500; 1e3; inf]*a;
+%         r_part = [0; 0.3*a; 0.5*a; 0.9*a; a; .3; .5; 1; 1.5; 2; 2.5; 3;3.5; 4; 4.5;5;
+%             6; 7; 8; 9; 10; 12; 15; 17; 20; 25; 30; 40; 50; 52; 55; 70; 100; 150; 200; 300; 500; inf];
+        R = 0;
+        for i = 1:length(rho_part)-1
+            R = R + PalLineSrc_CWE_RadialInt(...
+                pal, ma_max, m1_max, rho_part(i), rho_part(i+1), rho, 'J', ...
+                'is_farfield', ip.is_farfield, 'int_num', 5e2);
         end
-    end
-
-    if ~ip.is_farfield
-        JH = 0 * ma .* rho_vsrc .* rho;
-        [JH_prototype, JH_exp] = BesselJHankelProduct(...
-            ip.ma_max,...
-            ka * min(rho_vsrc, permute(rho, [3,2,1])), ...
-            ka * max(rho_vsrc, permute(rho, [3,2,1])));
-        JH_prototype = JH_prototype .* 10.^JH_exp;
-        JH(:, 1, ip.ma_max+1:end,1,:) = permute(JH_prototype, [3,2,1,4,5]);
-        JH(:, 1, 1:ip.ma_max,1,:) = JH(:, 1, end:-1:ip.ma_max+2,1,:);
     else
-        % inverse-law far field
-        ka = real(ka);
-        J = 0 * ma .* rho_vsrc;
-%         [J_prototype, J_exp] = BesselJ(ip.ma_max, (ka)*rho_vsrc);
-%         J_prototype = permute(J_prototype .* 10.^J_exp, [3,2,1,4,5]);
-        J_prototype = zeros(1,1,ip.ma_max+1,1,length(rho_vsrc));
-        for i = 0:ip.ma_max
-            J_prototype(1,1,i+1,1,:) = besselj(i, ka*squeeze(rho_vsrc));
-        end
-        J(1, 1, ip.ma_max+1:end,1,:) = J_prototype;
-        J(1, 1, 1:ip.ma_max,1,:) = (-1).^permute((ip.ma_max:-1:1).', [3,2,1])...
-            .* J(1, 1, end:-1:ip.ma_max+2, 1, :);
-        H = sqrt(2/pi/ka./rho) .* exp(1i*(ka.*rho- ma.*pi/2 - pi/4));
-        JH = J .* H;
-    end
+        % origin point
+        idx_origin = rho == 0;
+        rho_origin = rho(idx_origin);
+        % interior points
+        idx_int = (rho > 0) & (rho < a);
+        rho_int = rho(idx_int);
+        % exterior points
+        idx_ext = rho >= a;
+        rho_ext = rho(idx_ext);
 
-    radial = sum(sum(conj(R_m1) .* R_m2 .* JH .* ka^2 .* rho_vsrc .* weight, 5), 4);
+        % radial components
+        R = 0 * rho .* ma;
+    
+        % process origin points
+        if ~isempty(rho_origin)
+            R(idx_origin, 1, :) ...
+                = PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, 0, a, 0, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a, a+2, 0, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a+2, a+5, 0, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a+5, inf, 0, 'H');
+        end
+        % process interior points
+        if ~isempty(rho_int)
+            R(idx_int, 1, :) ...
+                = PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, 0, rho_int, rho_int, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_int, a, rho_int, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a, a+2, rho_int, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a+2, a+5, rho_int, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a+5, inf, rho_int, 'H');
+        end
+        % process exterior points
+        if ~isempty(rho_ext)
+            % R(idx_ext, 1, :) ...
+                % = PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, 0, a, rho_ext, 'J') ...
+                % + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a, rho_ext, rho_ext, 'J') ...
+                % + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext, rho_ext+2, rho_ext, 'H') ...
+                % + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext+2, rho_ext+5, rho_ext, 'H') ...
+                % + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext+5, inf, rho_ext, 'H');
+            R(idx_ext, 1, :) ...
+                = PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, 0, a, rho_ext, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, a, rho_ext/20, rho_ext, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext/20, rho_ext/10, rho_ext, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext/10, rho_ext/5, rho_ext, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext/5, rho_ext/2, rho_ext, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext/2, rho_ext, rho_ext, 'J') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext, rho_ext+2, rho_ext, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext+2, rho_ext+5, rho_ext, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext+5, rho_ext+10, rho_ext, 'H') ...
+                + PalLineSrc_CWE_RadialInt(pal, ma_max, m1_max, rho_ext+10, inf, rho_ext, 'H');
+        end
+    end
 end

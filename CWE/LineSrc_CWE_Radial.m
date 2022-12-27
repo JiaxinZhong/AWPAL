@@ -22,18 +22,10 @@
 function [R, R_prime] = LineSrc_CWE_Radial(src, rho, m_max, varargin)
 
     ip = inputParser;
-    ip.addParameter('int_num', 2e2);
-    ip.addParameter('profile', 'uniform', @(x)any(validatestring(x, {'uniform', 'steerable'})));
-    % ip.addParameter('focus_dist', 0.2);
-    ip.addParameter('steer_angle', [pi/4;pi/2]);
-    % ip.addParameter('is_farfield', 0);
-    % ip.addParameter('is_discrete', 0);
-    % ip.addParameter('discrete_size', 0.01);
-    % ip.addParameter('is_effective', 0);
-    % ip.addParameter('effective_size', 0.01);
+    ip.addParameter('int_num', []);
     ip.addParameter('is_cal_prime', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
-    ip.addParameter('array', []);
     ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
+    ip.addParameter('array', []);
     % normalization 
     parse(ip, varargin{:});
     ip = ip.Results;

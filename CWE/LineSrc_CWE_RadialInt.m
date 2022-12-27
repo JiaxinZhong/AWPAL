@@ -25,7 +25,7 @@ function int = LineSrc_CWE_RadialInt(src, m, cyl, rho1, rho2, rho, varargin)
     
     ip = inputParser;
     ip.addParameter('int_num', []);
-    ip.addParameter('is_log', false);
+    % ip.addParameter('is_log', false);
     ip.addParameter('is_farfield', false)
     parse(ip, varargin{:});
     ip = ip.Results;
@@ -47,51 +47,26 @@ function int = LineSrc_CWE_RadialInt(src, m, cyl, rho1, rho2, rho, varargin)
     m_abs = abs(m);
     [m_abs_unique, ~, idx] = unique(m_abs);
 
-    [rho_src, weight] = GaussLegendreQuadParam(ip.int_num, rho1, rho2, 'dim', 7);
-
-%     u = (src.CalProfile(rho_src) + (-1).^m_abs_unique .* src.CalProfile(-rho_src))/2; 
-    u = (1i.^(-m_abs_unique) .* src.CalProfile(rho_src) + 1i.^(m_abs_unique) .* src.CalProfile(-rho_src))/2; 
-     
-    switch cyl
-        case 'J'
-            if ip.is_farfield
-                int = log(u) + log(k) ...
-                    + BesselJ(m_abs_unique, k*rho_src, 'is_log', true) ...
-                    + HankelH(m_abs_unique, k*rho, 'is_log', true, 'arg_is_large', ip.is_farfield);
-                    % + 1i*k*rho + log(sqrt(2./(k*rho.*1i*pi))./1i.^m_abs_unique);
-            else
-                int = log(u) + log(k) ...
-                    + BesselJ(m_abs_unique, k*rho_src, 'is_log', true) ...
-                    + HankelH(m_abs_unique, k*rho, 'is_log', true);
-            end
-        case 'H'
-            int = log(u) + log(k) ...
-                + BesselJ(m_abs_unique, k*rho, 'is_log', true) ...
-                + HankelH(m_abs_unique, k*rho_src, 'is_log', true);
-        otherwise
-            error('Wrong cylinder functions!')
-    end
-    int = sum(exp(int) .* weight, 7);
-%     int = GaussLegendreQuad(@(rho_src) ...
-%         Integrand(src, m_abs_unique, k, cyl, rho_src, rho), ...
-%         rho1, rho2, 'int_num', ip.int_num, 'is_log', true, 'dim', 10);
-    int = int(idx, :, :, :, :, :, :);
+    int = GaussLegendreQuad(@(rho_src) ...
+        Integrand(src, m_abs_unique, cyl, rho_src, rho, ip.is_farfield), ...
+        rho1, rho2, 'int_num', ip.int_num, 'is_log', true, 'dim', 10);
+    int = exp(int(idx, :, :, :, :, :, :));
     int(m<0, :, :, :, :, :, :) = int(m<0, :, :, :, :, :, :) .* (-1).^(m(m<0));
-%     if ~ip.is_log
-%         int = exp(int);
-%     end
 end
 
-function int = Integrand(src, m, k, cyl, rho_src, rho)
-    u =  (src.CalProfile(rho_src) + (-1).^m .* src.CalProfile(-rho_src))/2; 
+function int = Integrand(src, m, cyl, rho_src, rho, is_farfield)
+    u = (1i.^(-m) .* src.CalProfile(rho_src) + 1i.^(m) .* src.CalProfile(-rho_src))/2; 
     switch cyl
         case 'J'
-            int = log(u) + log(k) ...
-                + BesselJLog(m, k*rho_src) + HankelHLog(m, k*rho);
+            rhoJ = rho_src;
+            rhoH = rho;
         case 'H'
-            int = log(u) + log(k) ...
-                + BesselJLog(m, k*rho) + HankelHLog(m, k*rho_src);
+            rhoJ = rho;
+            rhoH = rho_src;
         otherwise
             error('Wrong cylinder functions!')
     end
+    int = log(u) + log(src.wav.num) ...
+        + BesselJ(m, src.wav.num*rhoJ, 'is_log', true) ...
+        + HankelH(m, src.wav.num*rhoH, 'is_log', true, 'arg_is_large', is_farfield);
 end

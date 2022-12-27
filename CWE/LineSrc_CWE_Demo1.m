@@ -4,7 +4,7 @@ clear all
 % choose a profile
 prf = SrcProfile('name', 'uniform');
 % prf = SrcProfile('name', 'cosine', 'order', 1);
-% prf = SrcProfile('name', 'steerable', 'phi', -15/180*pi);
+prf = SrcProfile('name', 'steerable', 'phi', 15/180*pi);
 
 src = LineSrc('prf', prf, 'radius', 0.1, 'freq', 40e3);
 
@@ -13,7 +13,7 @@ fp = Point2D('rho', [0; logspace(-2, 1, 5e2).'], ...
 fp.Polar2Cart();
 
 tic
-prs = LineSrc_CWE(src, fp, 'is_farfield', false);
+prs = LineSrc_CWE(src, fp);
 toc
 spl = PrsToSpl(prs);
 

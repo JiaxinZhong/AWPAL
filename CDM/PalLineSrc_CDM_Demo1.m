@@ -1,10 +1,10 @@
 clear all
 prf = SrcProfile('name', 'uniform');
-src = LineSrc('radius', 0.15, 'prf', prf);
+src = LineSrc('radius', 0.2, 'prf', prf);
 pal = PalSrc('audio_freq', 4e3, 'ultra_freq', 40e3, 'src', src);
 
 %% The field points 
-phi = linspace(0, pi, 2e2).';
+phi = linspace(-pi/2, pi/2, 2e2).';
 
 %% main procedure
 tic

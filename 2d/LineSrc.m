@@ -1,11 +1,7 @@
-% A 2d line source
-classdef LineSrc < handle
+% A line source in the 2D problem
+classdef LineSrc < SoundSrc
     properties
         radius % radius of the circular source
-        prf % the profile at each array element
-        wav % the wave info
-        pos     % position of the source
-        dir     % direction of the source
     end
 
     properties (Dependent)
@@ -18,21 +14,31 @@ classdef LineSrc < handle
 
     methods
         function obj = LineSrc(varargin)
+            var_list = {'radius'};
+            var_here = {};
+            cnt_here = 0;
+            var_parent = {};
+            cnt_parent = 0;
+            
+            for i = 1:length(varargin)/2
+                if cell2mat(strfind(var_list, varargin{2*i-1})) == 1
+                    cnt_here = cnt_here + 1;
+                    var_here{2*cnt_here-1} = varargin{2*i-1};
+                    var_here{2*cnt_here} = varargin{2*i};
+                else
+                    cnt_parent = cnt_parent + 1;
+                    var_parent{2*cnt_parent-1} = varargin{2*i-1};
+                    var_parent{2*cnt_parent} = varargin{2*i};
+                end
+            end
+
             ip = inputParser();
-            ip.addParameter('wav', []);
-            ip.addParameter('freq', []);
             ip.addParameter('radius', []);
-            ip.addParameter('prf', SrcProfile('name', 'uniform'));
-            ip.parse(varargin{:});
+            ip.parse(var_here{:});
             ip = ip.Results;
 
+            obj = obj@SoundSrc(var_parent{:});
             obj.radius = ip.radius;
-            if ~isempty(ip.freq)
-                obj.wav = SoundWave('freq', ip.freq);
-            else
-                obj.wav = ip.wav;
-            end
-            obj.prf = ip.prf;
         end
 
         function u = CalProfile(obj, ys)
@@ -45,7 +51,7 @@ classdef LineSrc < handle
                     % u = exp(1i*k*xs.*cos(obj.prf.phi));
                     u = exp(1i*k*ys.*sin(obj.prf.phi));
                 case 'cosine'
-                    u = (cos(pi*xs/2./a)).^obj.prf.order / 2 * pi;
+                    u = (cos(pi*ys/2./a)).^obj.prf.order / 2 * pi;
                 case 'cosine_steerable'
                     u = (cos(pi*xs/2./a)).^obj.prf.order ...
                         .* exp(1i*k*xs.*cos(obj.prf.phi));
@@ -72,7 +78,8 @@ classdef LineSrc < handle
                 case 'cosine'
                     switch obj.prf.order
                         case 1
-                            dir = 2*obj.radius .* sin(ky.*obj.radius) ./ (1 - (2*ky.*obj.radius/pi).^2);
+%                             dir = 2*obj.radius .* cos(ky.*obj.radius) ./ (1 - (2*ky.*obj.radius/pi).^2);
+                            dir = obj.radius .* (sinc(ky.*obj.radius/pi+1/2) + sinc(ky.*obj.radius/pi-1/2));
                         case 2
                             dir = 2*sinc(ky .* obj.radius/pi) ...
                                 + (sinc(ky*obj.radius/pi + 1) + sinc(ky.*obj.radius/pi-1));

@@ -1,10 +1,7 @@
-classdef CircSrc < handle
+% a circular source in a 3D problem
+classdef CircSrc < SoundSrc
     properties
         radius  % radius of the circular source
-        prf     % the profile at each array element
-        wav     % the wave info
-        pos     % position of the source
-        dir     % direction of the source
     end
 
     properties (Dependent)
@@ -17,21 +14,31 @@ classdef CircSrc < handle
 
     methods
         function obj = CircSrc(varargin)
+            var_list = {'radius'};
+            var_here = {};
+            cnt_here = 0;
+            var_parent = {};
+            cnt_parent = 0;
+            
+            for i = 1:length(varargin)/2
+                if cell2mat(strfind(var_list, varargin{2*i-1})) == 1
+                    cnt_here = cnt_here + 1;
+                    var_here{2*cnt_here-1} = varargin{2*i-1};
+                    var_here{2*cnt_here} = varargin{2*i};
+                else
+                    cnt_parent = cnt_parent + 1;
+                    var_parent{2*cnt_parent-1} = varargin{2*i-1};
+                    var_parent{2*cnt_parent} = varargin{2*i};
+                end
+            end
+
             ip = inputParser();
-            ip.addParameter('wav', []);
-            ip.addParameter('freq', []);
             ip.addParameter('radius', []);
-            ip.addParameter('prf', []);
-            ip.parse(varargin{:});
+            ip.parse(var_here{:});
             ip = ip.Results;
 
+            obj = obj@SoundSrc(var_parent{:});
             obj.radius = ip.radius;
-            if ~isempty(ip.freq)
-                obj.wav = SoundWave('freq', ip.freq);
-            else
-                obj.wav = ip.wav;
-            end
-            obj.prf = ip.prf;
         end
 
         function u = CalProfile(obj, rs)

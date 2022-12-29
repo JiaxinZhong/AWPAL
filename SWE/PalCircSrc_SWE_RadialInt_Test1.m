@@ -1,56 +1,75 @@
-% close all
+%% Test convergence
 clear all
 
 prf = SrcProfile('name', 'uniform');
 % prf = SrcProfile('name', 'quadratic', 'order', 1);
-src = CircSrc('radius', .1, 'prf', prf);
-pal = PalSrc('audio_freq', 1e3, 'ultra_freq', 40e3, 'src', src);
+src = CircSrc('radius', .2, 'prf', prf);
+pal = PalSrc('audio_freq', 4e3, 'ultra_freq', 40e3, 'src', src);
 
-fp = Point3D('r', linspace(0, 3.3, 5e1).', ...
-    'theta', linspace(0, pi/2, 1e2), ...
-    'phi', permute([0; pi], [3, 2, 1]));
-fp.Sph2Cart();
+r = 1;
+r1 = 2;
+r2 = 5;
+
+la_max = 70;
+l1_max = ceil(real(pal.ultra_low.num)*pal.src_ultra.radius*1.2);
+l2_max = ceil(real(pal.ultra_high.num)*pal.src_ultra.radius*1.2);
 
 tic
 sph = 'j';
-R = PalCircSrc_SWE_RadialInt(pal, la, l1_max, l2_max, r1, r2, r, sph);
+R0 = PalCircSrc_SWE_RadialInt(pal, la_max, l1_max, l2_max, r1, r2, r, sph,...
+    'is_farfield', true);
 toc
+if 1
+   %% Coefficient
+   tic
+    la = permute((0:la_max).', [4,2,3,1]);
+    l1 = permute((0:l1_max).', [5,2,3,4,1]);
+    l2 = permute((0:l2_max).', [6,2,3,4,5,1]);
+    m1 = pal.src_low.prf.azimuth_order;
+    m2 = pal.src_high.prf.azimuth_order;
+    ma = m2 - m1;
+	wigner = 0 * l1 .* l2 .* la;
+	for i1 = 1:length(l1)
+		for i2 = 1:length(l2)
+			for ia = 1:length(la)
+% 				wigner(1, 1, 1, ia, i1, i2) = Wigner3j000(...
+%                     2*l1(i1) + abs(m1), 2*l2(i2) + abs(m2), 2*la(ia) + abs(ma))...
+%                     .* Wigner3j(...
+%                     2*l1(i1) + abs(m1), 2*l2(i2) + abs(m2), 2*la(ia) + abs(ma),...
+%                     -m1, m2, -ma);
+                wigner(1, 1, 1, ia, i1, i2) = Wigner3j000(...
+                    2*l1(i1) + abs(m1), 2*l2(i2) + abs(m2), 2*la(ia) + abs(ma))...
+                    .* Wigner3j(...
+                    2*l1(i1) + abs(m1), 2*l2(i2) + abs(m2), 2*la(ia) + abs(ma),...
+                    -m1, m2, -ma);
+			end
+		end
+    end
+    toc
 
-ang = [-flip(fp.theta), fp.theta];
-prs_show = [flip(prs(1,:,2)), prs(1,:,1)];
-dir_exact = PrsToSpl(prs_show);
-dir_exact = dir_exact - max(dir_exact);
+    % dim: l1
+    Y1 = SphHarmonic(2*l1(:) + abs(m1), m1, pi/2, 0);
+    % dim: 1 -> 1 -> 1 -> 1 -> l1
+    Y1 = permute(Y1, [5,2,3,4,1]);
+    % dim: l2
+    Y2 = SphHarmonic(2*l2(:) + abs(m2), m2, pi/2, 0);
+    % dim: 1 -> 1 -> 1 -> 1 -> 1 -> l2
+    Y2 = permute(Y2, [6,2,3,4,5,1]);
+    A = (-1).^m2 .* Y1 .* Y2 .* wigner ...
+        .* sqrt((4*l1+2*abs(m1)+1).*(4*l2+2*abs(m2)+1).*(4*la+2*abs(ma)+1)./4/pi);
+    
+    R = R0.*A;
+end
+R = squeeze(R);
 
-%% obtained by convolution model
-dir_conv_direct = PalPlanarSrc_Conv(pal, fp, 'type', 'direct');
-dir_conv_direct = [flip(dir_conv_direct(1,:,2)), dir_conv_direct(1,:,1)];
-
-dir_conv_improved = PalPlanarSrc_Conv(pal, fp, 'type', 'improved');
-dir_conv_improved = [flip(dir_conv_improved(1,:,2)), dir_conv_improved(1,:,1)];
-
-dir_Westervelt = PalPlanarSrc_Conv(pal, fp, 'type', 'Westervelt');
-dir_Westervelt = [flip(dir_Westervelt(1,:,2)), dir_Westervelt(1,:,1)];
-
+la_idx = 44;
+R_la = squeeze(R(la_idx, :, :));
+A_la = squeeze(A(1,1,1,la_idx, :, :));
+wigner_la = squeeze(wigner(1,1,1,la_idx,:,:));
 
 fig = Figure;
-hold on
-plot(ang/pi*180, dir_exact);
-plot(ang/pi*180, dir_conv_direct, '-.')
-plot(ang/pi*180, dir_conv_improved, '--')
-% plot(ang/pi*180, dir_Westervelt, ':')
+pcolor((0:l1_max), (0:l2_max), (abs(real(R_la.'))));
 fig.Init;
-legend({'Exact', 'Direct', 'Improved', 'Westervelt'})
-fn = sprintf('PalCircSrc_SWE_TestDir_220825A_%dkHz_%dHz_%dcm_', ...
-    pal.ultra.freq/1e3, pal.audio.freq, pal.src_ultra.radius*1e2);
-title(sprintf('f = %d Hz, a = %d cm', pal.audio.freq, pal.src_ultra.radius*1e2))
-save(['SWE/data/', fn, '.mat']);
-% fig.ExportTikz('filename', ['SWE/fig/', fn, '.tex']);
-
-fig_diff = Figure;
-hold on
-plot(ang/pi*180, abs(dir_exact - dir_conv_direct), '-.')
-plot(ang/pi*180, abs(dir_exact - dir_conv_improved), '--')
-% plot(ang/pi*180, abs(dir_exact - dir_Westervelt), ':')
-fig_diff.Init;
-legend({'Direct', 'Improved', 'Westervelt'})
-title(sprintf('f = %d Hz, a = %d cm', pal.audio.freq, pal.src_ultra.radius*1e2))
+% fig2 = Figure;
+% pcolor((0:l1_max), (0:l2_max), imag(R_la.'));
+% fig2.Init;

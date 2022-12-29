@@ -2,8 +2,9 @@
 clear all
 
 prf = SrcProfile('name', 'uniform');
+% prf = SrcProfile('name', 'quadratic', 'order', 1);
 % prf = SrcProfile('name', 'steerable', 'theta', pi/3);
-src = CircSrc('radius', .1, 'prf', prf, 'freq', 40e3);
+src = CircSrc('radius', .4, 'prf', prf, 'freq', 40e3);
 
 fp = Point3D('r', 1, ...
     'theta', linspace(0, pi/2, 4e2), ...

@@ -2,7 +2,7 @@
 % INTRO
 %   - Calculate the Wigner 3j symbol
 % =========================================================================
-function w = Wigner3j_220418A(j1, j2, j3, m1, m2, m3)
+function w = Wigner3j(j1, j2, j3, m1, m2, m3)
 
 % Compute the Wigner 3j symbol using the Racah formula. 
 %
@@ -46,13 +46,13 @@ function w = Wigner3j_220418A(j1, j2, j3, m1, m2, m3)
     % Selection rules
     if ( j3 > (j1 + j2) ) || ( j3 < abs(j1 - j2) ) ... % j3 out of interval
        || ( m1 + m2 + m3 ~= 0 ) ... % non-conserving angular momentum
-       || any( abs( m123 ) > j123 ), % m is larger than j
+       || any( abs( m123 ) > j123 ) % m is larger than j
         w = 0;
         return
     end
         
     % Simple common case
-    if ~any( m123 ) && rem( sum( j123 ), 2 ), % m1 = m2 = m3 = 0 & j1 + j2 + j3 is odd
+    if ~any( m123 ) && rem( sum( j123 ), 2 ) % m1 = m2 = m3 = 0 & j1 + j2 + j3 is odd
         w = 0;
         return
     end
@@ -69,8 +69,8 @@ function w = Wigner3j_220418A(j1, j2, j3, m1, m2, m3)
 
     t = tmin : tmax;
     w = sum( (-1).^t .* exp( -ones(1,6) * gammaln( [t; t-t1; t-t2; t3-t; t4-t; t5-t] +1 ) + ...
-                             gammaln( [j1+j2+j3+1, j1+j2-j3, j1-j2+j3, -j1+j2+j3, j1+m1, j1-m1, j2+m2, j2-m2, j3+m3, j3-m3] +1 ) ...
-                             * [-1; ones(9,1)] * 0.5 ) ) * (-1)^( j1-j2-m3 );
+         gammaln( [j1+j2+j3+1, j1+j2-j3, j1-j2+j3, -j1+j2+j3, j1+m1, j1-m1, j2+m2, j2-m2, j3+m3, j3-m3] +1 ) ...
+         * [-1; ones(9,1)] * 0.5 ) ) * (-1)^( j1-j2-m3 );
              
     % Warnings
     if isnan( w )

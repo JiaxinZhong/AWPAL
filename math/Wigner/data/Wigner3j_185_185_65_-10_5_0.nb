@@ -1,0 +1,183 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      7317,        175]
+NotebookOptionsPosition[      6743,        157]
+NotebookOutlinePosition[      7142,        173]
+CellTagsIndexPosition[      7099,        170]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"w", "=", 
+   RowBox[{"List", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"J1", "=", "185."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"J2", "=", "185."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"J3", "=", "65."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m1", "=", "10."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m2", "=", "5."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ma", "=", 
+   RowBox[{"m2", "-", "m1"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"j1", "=", "0.0"}], ",", 
+    RowBox[{"j1", "<=", "J1"}], ",", 
+    RowBox[{"j1", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"j2", "=", "0.0"}], ",", 
+      RowBox[{"j2", "<=", "J2"}], ",", 
+      RowBox[{"j2", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"j3", "=", "0.0"}], ",", 
+        RowBox[{"j3", "<=", "J3"}], ",", 
+        RowBox[{"j3", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"Abs", "[", 
+             RowBox[{"j1", "-", "j2"}], "]"}], "<=", " ", "j3"}], " ", "&&", 
+           " ", 
+           RowBox[{
+            RowBox[{"j1", "+", "j2"}], ">=", " ", "j3"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"w", "=", 
+           RowBox[{"Append", "[", 
+            RowBox[{"w", ",", 
+             RowBox[{"N", "[", 
+              RowBox[{
+               RowBox[{"ThreeJSymbol", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"2.0", " ", "j1"}], "+", 
+                    RowBox[{"Abs", "[", "m1", "]"}]}], ",", 
+                   RowBox[{"-", "m1"}]}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"2.0", " ", "j2"}], "+", 
+                    RowBox[{"Abs", "[", "m2", "]"}]}], ",", "m2"}], "}"}], 
+                 ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"2.0", " ", "j3"}], "+", 
+                    RowBox[{"Abs", "[", "ma", "]"}]}], ",", 
+                   RowBox[{"-", "ma"}]}], "}"}]}], "]"}], ",", "15"}], 
+              "]"}]}], "]"}]}]}], "]"}]}], "]"}]}], "]"}]}], "]"}], "//", 
+  "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{
+   RowBox[{"ToString", "[", 
+    RowBox[{"StringForm", "[", 
+     RowBox[{
+     "\"\<C:\\\\Research\\\\PalBook2204\\\\matlab\\\\AWPAL\\\\math\\\\Wigner\\\
+\\data\\\\Wigner3j_``_``_``_``_``_``.mat\>\"", ",", " ", 
+      RowBox[{"Round", "[", "J1", "]"}], ",", 
+      RowBox[{"Round", "[", "J2", "]"}], ",", 
+      RowBox[{"Round", "[", "J3", "]"}], ",", 
+      RowBox[{"Round", "[", 
+       RowBox[{"-", "m1"}], "]"}], ",", 
+      RowBox[{"Round", "[", "m2", "]"}], ",", 
+      RowBox[{"Round", "[", 
+       RowBox[{"-", "ma"}], "]"}]}], "]"}], "]"}], ",", 
+   RowBox[{"\"\<data\>\"", "->", "w"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.8812530985288205`*^9, 3.881253115559676*^9}, {
+   3.8812537897137985`*^9, 3.881253850797839*^9}, {3.8812546901721354`*^9, 
+   3.881254691679973*^9}, {3.8812609831337643`*^9, 3.8812610021242895`*^9}, {
+   3.881261112619358*^9, 3.881261299106353*^9}, {3.8812613769453754`*^9, 
+   3.8812614073094425`*^9}, {3.881261445908889*^9, 3.8812615726929064`*^9}, {
+   3.881261606881689*^9, 3.881261678316843*^9}, {3.881261728348741*^9, 
+   3.8812617574588346`*^9}, {3.8812621994714537`*^9, 3.88126220257893*^9}, {
+   3.881263157951806*^9, 3.8812631602324333`*^9}, {3.8812632186462097`*^9, 
+   3.881263219557372*^9}, {3.8812641699065094`*^9, 3.8812641772629814`*^9}, {
+   3.881264213587514*^9, 3.881264277924054*^9}, {3.8812644700199347`*^9, 
+   3.8812644724062853`*^9}, {3.8812646449983587`*^9, 
+   3.8812646463842754`*^9}, {3.8812647697722597`*^9, 
+   3.8812647990759797`*^9}, {3.881265091955551*^9, 3.881265093703637*^9}, {
+   3.881265745242601*^9, 3.881265750686947*^9}, {3.881303460836855*^9, 
+   3.88130348569075*^9}, {3.881303532830518*^9, 3.881303722439144*^9}, {
+   3.8813039519499097`*^9, 3.8813039641565666`*^9}, {3.8813042611446247`*^9, 
+   3.881304268491239*^9}, {3.881304527423813*^9, 3.8813045373846383`*^9}, {
+   3.8813045779812365`*^9, 3.8813045781836987`*^9}, {3.881304636339422*^9, 
+   3.881304636518464*^9}, {3.8813054531467166`*^9, 3.881305465165216*^9}, {
+   3.8813058877431774`*^9, 3.8813058891028333`*^9}, {3.881305985271449*^9, 
+   3.881305992520879*^9}, {3.881312294149519*^9, 3.881312339762187*^9}, {
+   3.8813144190813*^9, 3.8813144875537467`*^9}, {3.881314587521864*^9, 
+   3.881314589720068*^9}, {3.881329153857811*^9, 3.8813291547628665`*^9}, {
+   3.8813293743760047`*^9, 3.8813294720719457`*^9}, 
+   3.8813299063250933`*^9},ExpressionUUID->"af8c0c89-19d2-448f-a79a-\
+c29fcb37cbde"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2399.5749884`", ",", "Null"}], "}"}]], "Output",
+ CellChangeTimes->{{3.88126477103391*^9, 3.8812647711246667`*^9}, 
+   3.881265086645851*^9, {3.88126552323356*^9, 3.8812655435066175`*^9}, 
+   3.881265769772831*^9, 3.8813034883419385`*^9, {3.8813036354610233`*^9, 
+   3.8813036512499514`*^9}, 3.881303806616723*^9, 3.8813039754331365`*^9, 
+   3.881305471599908*^9, 3.8813059539135385`*^9, 3.8813083935650644`*^9},
+ CellLabel->
+  "Out[555]=",ExpressionUUID->"a70fa229-33a9-4238-9cb4-f0f5ec0490b0"],
+
+Cell[BoxData["\<\"C:\\\\Research\\\\PalBook2204\\\\matlab\\\\AWPAL\\\\math\\\\\
+Wigner\\\\data\\\\Wigner3j_185_185_65_-1_-1_2.mat\"\>"], "Output",
+ CellChangeTimes->{{3.88126477103391*^9, 3.8812647711246667`*^9}, 
+   3.881265086645851*^9, {3.88126552323356*^9, 3.8812655435066175`*^9}, 
+   3.881265769772831*^9, 3.8813034883419385`*^9, {3.8813036354610233`*^9, 
+   3.8813036512499514`*^9}, 3.881303806616723*^9, 3.8813039754331365`*^9, 
+   3.881305471599908*^9, 3.8813059539135385`*^9, 3.881308394227321*^9},
+ CellLabel->
+  "Out[556]=",ExpressionUUID->"ccd5ca06-8ffb-4827-b886-e8771cf7e489"]
+}, Open  ]]
+},
+WindowSize->{851, 609},
+WindowMargins->{{508, Automatic}, {163, Automatic}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"7b9f1702-ffad-4916-8513-381f010b44e8"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 5015, 111, 352, "Input",ExpressionUUID->"af8c0c89-19d2-448f-a79a-c29fcb37cbde"],
+Cell[5598, 135, 535, 9, 32, "Output",ExpressionUUID->"a70fa229-33a9-4238-9cb4-f0f5ec0490b0"],
+Cell[6136, 146, 591, 8, 32, "Output",ExpressionUUID->"ccd5ca06-8ffb-4827-b886-e8771cf7e489"]
+}, Open  ]]
+}
+]
+*)
+

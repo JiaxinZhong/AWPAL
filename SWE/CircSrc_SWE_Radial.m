@@ -20,7 +20,7 @@
 %   - 4: order l
 %   - 5: integration
 % =========================================================================
-function [R, R_prime] = CircSrc_SWE_Radial(src, r, max_order, varargin)
+function [R, R_prime] = CircSrc_SWE_Radial(src, r, ell_max, varargin)
 
     ip = inputParser;
     ip.addParameter('int_num', []);
@@ -32,15 +32,17 @@ function [R, R_prime] = CircSrc_SWE_Radial(src, r, max_order, varargin)
 
     a = src.radius;
 
-    ell = permute((0:max_order).', [4, 2, 3, 1]);
+    ell = permute((0:ell_max).', [4, 2, 3, 1]);
 
     if ip.is_farfield
+        % dim: ell -> r
         R = CircSrc_SWE_RadialInt(src, 2*ell(:)+abs(src.prf.azimuth_order), ...
             'j', 0, a, r.', 'int_num', ip.int_num, 'is_farfield', ip.is_farfield);
-        R = permute(R, [4,2,3,1]);
+        % dim: r -> 1 -> 1 -> ell
+        R = permute(permute(R, [4,2,3,1]), [2,1,3,4]);
     else
         % origin points
-        idx_origin = r == 0;
+        idx_origin = (r == 0);
         r_origin = r(idx_origin);
         % interior points
         idx_int = (r > 0) & (r < a);
@@ -54,28 +56,31 @@ function [R, R_prime] = CircSrc_SWE_Radial(src, r, max_order, varargin)
 
         %% process origin points
         if ~isempty(r_origin)
-            % dim: l => r_origin
+            % dim: ell -> r_origin
             int = CircSrc_SWE_RadialInt(src, 2*ell(:)+abs(src.prf.azimuth_order), ...
                 'h', 0, a, r_origin.', 'int_num', ip.int_num);
-            R(idx_origin, 1, 1, :) = permute(permute(int, [4, 2, 3, 1]), [2, 1, 3, 4]);
+            % dim: r_origin -> 1 -> 1 -> ell
+            R(idx_origin, 1, 1, :) = permute(permute(int, [4,2,3,1]), [2,1,3,4]);
         end
 
         %% process interior points
         if ~isempty(r_int)
-            % dim: m => rho_origin
+            % dim: ell -> r_int
             int = CircSrc_SWE_RadialInt(src, 2*ell(:)+abs(src.prf.azimuth_order), ...
                 'j', 0, r_int.', r_int.', 'int_num', ip.int_num) ...
                 + CircSrc_SWE_RadialInt(src, 2*ell(:)+abs(src.prf.azimuth_order), ...
                 'h', r_int.', a, r_int.', 'int_num', ip.int_num);
-            R(idx_int, 1, 1, :) = permute(permute(int, [4, 2, 3, 1]), [2, 1, 3, 4]);
+            % dim: r_int -> 1 -> 1 -> ell
+            R(idx_int, 1, 1, :) = permute(permute(int, [4,2,3,1]), [2,1,3,4]);
         end
 
         %% process exterior points
         if ~isempty(r_ext)
-            % dim: m => r_origin
+            % dim: ell -> r_ext
             int = CircSrc_SWE_RadialInt(src, 2*ell(:)+abs(src.prf.azimuth_order), ...
                 'j', 0, a, r_ext.', 'int_num', ip.int_num);
-            R(idx_ext, 1, 1, :) = permute(permute(int, [4, 2, 3, 1]), [2, 1, 3, 4]);
+            % dim: r_ext -> 1 -> 1 -> ell
+            R(idx_ext, 1, 1, :) = permute(permute(int, [4,2,3,1]), [2,1,3,4]);
         end
     end
 

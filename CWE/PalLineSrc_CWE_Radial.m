@@ -36,6 +36,7 @@ function R = PalLineSrc_CWE_Radial(...
                 pal, ma_max, m1_max, rho_part(i), rho_part(i+1), rho, 'J', ...
                 'is_farfield', ip.is_farfield, 'int_num', 5e2);
         end
+%         R = sum(R, 4);
     else
         % origin point
         idx_origin = rho == 0;

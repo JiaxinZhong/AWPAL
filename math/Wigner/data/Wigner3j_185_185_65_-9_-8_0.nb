@@ -1,0 +1,170 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6188,        162]
+NotebookOptionsPosition[      5615,        144]
+NotebookOutlinePosition[      6014,        160]
+CellTagsIndexPosition[      5971,        157]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"w", "=", 
+   RowBox[{"List", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"J1", "=", "185."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"J2", "=", "185."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"J3", "=", "65."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m1", "=", "9."}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"m2", "=", 
+   RowBox[{"-", "8."}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ma", "=", 
+   RowBox[{"m2", "-", "m1"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"j1", "=", "0.0"}], ",", 
+    RowBox[{"j1", "<=", "J1"}], ",", 
+    RowBox[{"j1", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"j2", "=", "0.0"}], ",", 
+      RowBox[{"j2", "<=", "J2"}], ",", 
+      RowBox[{"j2", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"j3", "=", "0.0"}], ",", 
+        RowBox[{"j3", "<=", "J3"}], ",", 
+        RowBox[{"j3", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"Abs", "[", 
+             RowBox[{"j1", "-", "j2"}], "]"}], "<=", " ", "j3"}], " ", "&&", 
+           " ", 
+           RowBox[{
+            RowBox[{"j1", "+", "j2"}], ">=", " ", "j3"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"w", "=", 
+           RowBox[{"Append", "[", 
+            RowBox[{"w", ",", 
+             RowBox[{"N", "[", 
+              RowBox[{
+               RowBox[{"ThreeJSymbol", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"2.0", " ", "j1"}], "+", 
+                    RowBox[{"Abs", "[", "m1", "]"}]}], ",", 
+                   RowBox[{"-", "m1"}]}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"2.0", " ", "j2"}], "+", 
+                    RowBox[{"Abs", "[", "m2", "]"}]}], ",", "m2"}], "}"}], 
+                 ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"2.0", " ", "j3"}], "+", 
+                    RowBox[{"Abs", "[", "ma", "]"}]}], ",", 
+                   RowBox[{"-", "ma"}]}], "}"}]}], "]"}], ",", "15"}], 
+              "]"}]}], "]"}]}]}], "]"}]}], "]"}]}], "]"}]}], "]"}], "//", 
+  "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{
+   RowBox[{"ToString", "[", 
+    RowBox[{"StringForm", "[", 
+     RowBox[{
+     "\"\<C:\\\\Research\\\\PalBook2204\\\\matlab\\\\AWPAL\\\\math\\\\Wigner\\\
+\\data\\\\Wigner3j_``_``_``_``_``_``.mat\>\"", ",", " ", 
+      RowBox[{"Round", "[", "J1", "]"}], ",", 
+      RowBox[{"Round", "[", "J2", "]"}], ",", 
+      RowBox[{"Round", "[", "J3", "]"}], ",", 
+      RowBox[{"Round", "[", 
+       RowBox[{"-", "m1"}], "]"}], ",", 
+      RowBox[{"Round", "[", "m2", "]"}], ",", 
+      RowBox[{"Round", "[", 
+       RowBox[{"-", "ma"}], "]"}]}], "]"}], "]"}], ",", 
+   RowBox[{"\"\<data\>\"", "->", "w"}]}], "]"}]}], "Input",
+ CellChangeTimes->CompressedData["
+1:eJwdzF1IU2EAh/HDmC2mE2E0NOYshzZwxNhFFCOdmozOaMhQtLpzzGGQbQxp
+EHQhU0FkUxc1DmGDdpNDhyXH3UyGjRpyLpJYkYxYOfzYJrU+TEuW7/+9ePjd
+PecH7lntIoZh1CRYV+yu38kX2z/vuhqg8yPvhtsTNx/AxtGuHOxbG6EKptxB
+nnjxb+cRTG3IJQViq8Omgl6jSgN/be+1wLkzcR1ktY+NULiUuQYfqddvwC1N
+ZQ98s7jYB5sV33wwOG71Q/3I6qkisdYpkcDEQk81LKdd1HOiq2Ow/45mHOaF
+l5NwcyY+Cy3PE/OQZWQR6PvxLAGPzQL1Fn/5Hbw7/PU9zAYeHkK9l6faXl9g
+94mef2mq9y23/J8YOsuvQC7AxaFHZknDF/ZyCQZFYz9hMhSuZQrFdkPMXwez
+/v0r8LdFa4DsYJsRZrJd1KnMpAl2PJmm7iyFF6D7elMUKlN/tuAQq85BPqr5
+DqWRmhL9pJJiMfGDzSOFIm6guoJojpUUUPnKqYaCdIWqcxuMVUTHUD/VcFq4
+DT/Jv1DnJL334VPOST0Br6dIhQ==
+  "],ExpressionUUID->"af8c0c89-19d2-448f-a79a-c29fcb37cbde"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2399.5749884`", ",", "Null"}], "}"}]], "Output",
+ CellChangeTimes->{{3.88126477103391*^9, 3.8812647711246667`*^9}, 
+   3.881265086645851*^9, {3.88126552323356*^9, 3.8812655435066175`*^9}, 
+   3.881265769772831*^9, 3.8813034883419385`*^9, {3.8813036354610233`*^9, 
+   3.8813036512499514`*^9}, 3.881303806616723*^9, 3.8813039754331365`*^9, 
+   3.881305471599908*^9, 3.8813059539135385`*^9, 3.8813083935650644`*^9},
+ CellLabel->
+  "Out[555]=",ExpressionUUID->"a70fa229-33a9-4238-9cb4-f0f5ec0490b0"],
+
+Cell[BoxData["\<\"C:\\\\Research\\\\PalBook2204\\\\matlab\\\\AWPAL\\\\math\\\\\
+Wigner\\\\data\\\\Wigner3j_185_185_65_-1_-1_2.mat\"\>"], "Output",
+ CellChangeTimes->{{3.88126477103391*^9, 3.8812647711246667`*^9}, 
+   3.881265086645851*^9, {3.88126552323356*^9, 3.8812655435066175`*^9}, 
+   3.881265769772831*^9, 3.8813034883419385`*^9, {3.8813036354610233`*^9, 
+   3.8813036512499514`*^9}, 3.881303806616723*^9, 3.8813039754331365`*^9, 
+   3.881305471599908*^9, 3.8813059539135385`*^9, 3.881308394227321*^9},
+ CellLabel->
+  "Out[556]=",ExpressionUUID->"ccd5ca06-8ffb-4827-b886-e8771cf7e489"]
+}, Open  ]]
+},
+WindowSize->{851, 609},
+WindowMargins->{{508, Automatic}, {163, Automatic}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"7b9f1702-ffad-4916-8513-381f010b44e8"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3887, 98, 352, "Input",ExpressionUUID->"af8c0c89-19d2-448f-a79a-c29fcb37cbde"],
+Cell[4470, 122, 535, 9, 32, "Output",ExpressionUUID->"a70fa229-33a9-4238-9cb4-f0f5ec0490b0"],
+Cell[5008, 133, 591, 8, 32, "Output",ExpressionUUID->"ccd5ca06-8ffb-4827-b886-e8771cf7e489"]
+}, Open  ]]
+}
+]
+*)
+

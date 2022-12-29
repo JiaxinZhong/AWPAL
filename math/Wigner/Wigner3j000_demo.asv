@@ -1,0 +1,60 @@
+clear all
+
+j1_max = 185;
+j2_max = 185;
+j3_max = 65;
+
+m1 = 0;
+m2 = 0;
+ma = m2-m1;
+
+tic
+w = zeros(round((j1_max+1)*(j2_max+1)*(j3_max+1)*0.7),1);
+t = 0;
+for j1 = 0:j1_max
+    for j2 = 0:j2_max
+        for j3 = 0:j3_max
+            if abs(j1-j2) <= j3 && j1+j2 >= j3
+                t = t + 1;
+                w(t) = Wigner3j(2*j1+abs(m1), 2*j2+abs(m2), 2*j3+abs(ma),...
+                    -m1, m2, -ma);
+            end
+        end
+    end
+end
+toc
+
+tic
+fn_exact = 'Wigner3j_185_185_65_0_0_0.mat';
+w_exact = load(fn_exact).data;
+toc
+
+ww = zeros(j1_max+1,j2_max+1,j3_max+1);
+tic
+t = 0;
+for j1 = 0:j1_max-1
+    for j2 = 0:j2_max-1
+        for j3 = 0:j3_max-1
+            if abs(j1-j2) <= j3 && j1+j2 >= j3
+                t = t+1;
+                ww(j1+1,j2+1,j3+1) = ww(t);
+            end
+        end
+    end
+end
+toc
+
+w = w(1:length(w_exact));
+
+idx = round(length(w_exact)/10));
+w_show = w(1:idx);
+w_exact_show = w_exact(1:idx);
+
+fig = Figure;
+subplot(211)
+plot(w_exact_show);
+hold on
+plot(w_show, '--');
+
+subplot(212);
+plot(w_show - w_exact_show);

@@ -1,6 +1,7 @@
 % sound source
-classdef SoundSrc < handle
+classdef SoundSrc < matlab.mixin.Copyable
     properties
+        prf     % the profile at each array element
         wav     % the wave info
         pos     % position of the source
         dir     % direction of the source
@@ -16,6 +17,7 @@ classdef SoundSrc < handle
             ip = inputParser();
             ip.addParameter('wav', []);
             ip.addParameter('freq', []);
+            ip.addParameter('prf', []);
             ip.addParameter('pos', []);
             ip.addParameter('pos_centroid', []);
             ip.addParameter('Q', 1);
@@ -32,6 +34,7 @@ classdef SoundSrc < handle
             obj.Q = ip.Q;
             obj.dir = ip.dir;
             obj.pos_centroid = ip.pos_centroid;
+            obj.prf = ip.prf;
         end
 
     end

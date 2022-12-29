@@ -3,15 +3,15 @@ clear all
 
 prf = SrcProfile('name', 'uniform');
 % prf = SrcProfile('name', 'quadratic', 'order', 1);
-src = CircSrc('radius', .05, 'prf', prf);
-pal = PalSrc('audio_freq', 1e3, 'ultra_freq', 40e3, 'src', src);
+src = CircSrc('radius', .1, 'prf', prf);
+pal = PalSrc('audio_freq', 4e3, 'ultra_freq', 40e3, 'src', src);
 
 fp = Point3D('r', linspace(0, 3.4, 5e1).', ...
     'theta', linspace(0, pi/2, 6e1), ...
     'phi', permute([0; pi], [3, 2, 1]));
 fp.Sph2Cart();
  
-prs = PalCircSrc_SWE(pal, fp, 'la_max', 40);
+prs = PalCircSrc_SWE(pal, fp, 'la_max', 60);
 spl = PrsToSpl(prs);
 
 fp_z_show = [flipud(fp.z(2:end,:)); fp.z];

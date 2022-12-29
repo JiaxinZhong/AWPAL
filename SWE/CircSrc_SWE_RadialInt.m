@@ -28,7 +28,7 @@ function int = CircSrc_SWE_RadialInt(src, n, sph, r1, r2, r, varargin)
     
     ip = inputParser;
     ip.addParameter('int_num', []);
-    ip.addParameter('is_log', false);
+%     ip.addParameter('is_log', false);
     ip.addParameter('is_farfield', false, @(x)validateattributes(x, {'logical'}, {'scalar'}));
     % normalization 
     parse(ip, varargin{:});
@@ -53,9 +53,10 @@ function int = CircSrc_SWE_RadialInt(src, n, sph, r1, r2, r, varargin)
         Integrand(src, n_unique, sph, rs, r, ip.is_farfield), ...
         r1, r2, 'int_num', ip.int_num, 'is_log', true, 'dim', 10);
     int = int(idx, :, :, :, :, :, :);
-    if ~ip.is_log
-        int = exp(int);
-    end
+    int = exp(int);
+%     if ~ip.is_log
+%         int = exp(int);
+%     end
 end
 
 function int = Integrand(src, n, sph, rs, r, is_farfield)
@@ -73,4 +74,7 @@ function int = Integrand(src, n, sph, rs, r, is_farfield)
     int = log(u) + 2*log(src.wav.num) + log(rs) ...
         + SphBesselJ(n, src.wav.num*rj, 'is_log', true) ...
         + SphHankelH(n, src.wav.num*rh, 'is_log', true, 'arg_is_large', is_farfield);
+%     int = u.* (src.wav.num)^2 .* (rs) ...
+%         .* exp(SphBesselJ(n, src.wav.num*rj, 'is_log', true) ...
+%         + SphHankelH(n, src.wav.num*rh, 'is_log', true, 'arg_is_large', is_farfield));
 end

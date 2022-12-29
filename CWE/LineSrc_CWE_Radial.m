@@ -38,19 +38,20 @@ function [R, R_prime] = LineSrc_CWE_Radial(src, rho, m_max, varargin)
     m = permute((-m_max:m_max).', [3,2,1]);
 
     if ip.is_farfield
-        % dim: m => rho
+        % dim: m -> rho
         int = LineSrc_CWE_RadialInt(src, m(:), 'J', 0, a, rho.', ...
             'int_num', ip.int_num, 'is_farfield', ip.is_farfield);
+        % dim: rho -> 1 -> m
         R = permute(permute(int, [3,2,1]), [2,1,3]);
     else
         % origin points
-        idx_origin = rho == 0;
+        idx_origin = (rho == 0);
+        rho_origin = rho(idx_origin);
         % interior points
         idx_int = (rho > 0) & (rho < a);
+        rho_int = rho(idx_int);
         % exterior points
         idx_ext = rho >= a;
-        rho_origin = rho(idx_origin);
-        rho_int = rho(idx_int);
         rho_ext = rho(idx_ext);   
 
         % radial component
@@ -58,27 +59,30 @@ function [R, R_prime] = LineSrc_CWE_Radial(src, rho, m_max, varargin)
 
         %% process origin points
         if ~isempty(rho_origin)
-            % dim: m => rho_origin
+            % dim: m -> rho_origin
             int = LineSrc_CWE_RadialInt(src, m(:), 'H', 0, a, rho_origin.', ...
                 'int_num', ip.int_num);
+            % dim: rho_origin -> 1 -> m
             R(idx_origin, :, :) = permute(permute(int, [3,2,1]), [2,1,3]);
         end
 
         %% process interior points
         if ~isempty(rho_int)
-            % dim: m => rho_origin
+            % dim: m -> rho_int
             int = LineSrc_CWE_RadialInt(src, m(:), 'J', 0, rho_int.', rho_int.', ...
                 'int_num', ip.int_num) ...
                 + LineSrc_CWE_RadialInt(src, m(:), 'H', rho_int.', a, rho_int.', ...
                 'int_num', ip.int_num);
+            % dim: rho_int -> 1 -> m
             R(idx_int, :, :) = permute(permute(int, [3,2,1]), [2,1,3]);
         end
 
         %% process exterior points
         if ~isempty(rho_ext)
-            % dim: m => rho_origin
+            % dim: m -> rho_ext
             int = LineSrc_CWE_RadialInt(src, m(:), 'J', 0, a, rho_ext.', ...
                 'int_num', ip.int_num);
+            % dim: rho_ext -> 1 -> m
             R(idx_ext, :, :) = permute(permute(int, [3,2,1]), [2,1,3]);
         end
     end

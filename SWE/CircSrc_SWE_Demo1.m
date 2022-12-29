@@ -2,9 +2,10 @@
 clear all
 
 prf = SrcProfile('name', 'uniform');
-src = CircSrc('radius', .1, 'prf', prf, 'freq', 40e3);
+% prf = SrcProfile('name', 'quadratic', 'order', 1);
+src = CircSrc('radius', .4, 'prf', prf, 'freq', 40e3);
 
-fp = Point3D('r', logspace(-3, 1, 2e2).', ...
+fp = Point3D('r', logspace(-3, 1, 4e2).', ...
     'theta', linspace(0, pi/2, 1e2), ...
     'phi', permute([0; pi], [3, 2, 1]));
 fp.Sph2Cart();
@@ -20,8 +21,8 @@ spl_show = [flipud(spl(:,:,2).'); spl(:,:,1).'];
 fig = Figure;
 pcolor(z, x, spl_show)
 fig.Init;
-xlim([0,2])
-ylim([-.7,.7])
+% xlim([0,5])
+% ylim([-.7,.7])
 % caxis([80,120])
 
 %% Axial field

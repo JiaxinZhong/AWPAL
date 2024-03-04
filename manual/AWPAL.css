@@ -1,0 +1,18 @@
+body {
+    font-family: 'DejaVu LGC Serif', serif;
+    font-size: 120%;
+}
+
+.ltx_lstlisting {
+    font-family: Consolas, Courier, monospace;
+}
+
+/* @namespace mml url(http://www.w3.org/1998/Math/MathML);
+@font-face {
+    font-family: "STIXMath";
+    src: url("STIXTwoMath-Regular.woff2"); }
+
+math,
+mml|math { 
+    font-family: "STIXMath"; 
+} */

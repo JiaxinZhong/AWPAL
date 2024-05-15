@@ -20,7 +20,7 @@ fp.phi = 0;
 %% main function
 prs_SWE = SWE3D(src, fp);
 [prs_ClosedForm, vel_ClosedForm] = ClosedForm_CircPiston(src, fp);
-[prs_DIM, vel_DIM] = DIM3D_CircSrc(src, fp, 'int_num', 100, 'is_cal_vel', true);
+[prs_DIM, vel_DIM] = DIM3D(src, fp, 'int_num', 100, 'int_coord', 'polar', 'is_cal_vel', true);
 
 prs_err_SWE = log10(abs((prs_SWE - prs_ClosedForm) ./ prs_ClosedForm));
 prs_err_DIM = log10(abs((prs_DIM - prs_ClosedForm) ./ prs_ClosedForm));

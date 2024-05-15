@@ -22,18 +22,22 @@ pal.src2.prf.val = @(rs) 1;
 pal.srca.wav.freq = pal.src2.wav.freq - pal.src1.wav.freq;
 
 % field points
-fp.x = 0; fp.y = 0; fp.z = logspace(-4, 1, 7e2).';
+% x and y coordinates must be zero
+fp.x = 0; fp.y = 0; 
+% fp.z must lie in the first dimension, i.e., column vector
+fp.z = logspace(-4, 1, 7e2).';
 
 %% main function
 v0 = 0.12;
 p0 = 1.21 * 343 * v0;
+% include local effects
 is_incl_local = true;
 
 profile on -memory
 [prs, prs_tot] = PalDIM3D_CircSrc_Axis(pal, fp, ...
     'z_int_num', 300, 'rho_int_num', 200, ...
     'ultra_int_num', 200, ...
-    'z_vsrc', [-10,-5,-3,-1, 0, 0.1, 0.3, 0.5, 1, 3,5,10], ...
+    'z_vsrc', [-15, -10,-5,-3,-1, 0, 0.1, 0.3, 0.5, 1, 3,5,10, 15], ... % integration ranges for z coordinate of virtual sources
     'is_incl_local', is_incl_local, ...
     'int_method', 'Gauss');
 profile viewer
@@ -66,4 +70,7 @@ set(gca, 'linewidth', 1.5)
 set(gca, 'fontsize', 20);
 set(gca, 'xtick', 10.^(-4:1))
 set(gca, 'fontname', 'times new roman')
-exportgraphics(gcf, 'DIM/fig/PalDIM3D_CircSrc_Axis_Demo_.png', 'resolution', 300)
+
+% Export the figure
+% exportgraphics(gcf, 'DIM/fig/PalDIM3D_CircSrc_Axis_Demo_.pdf', 'ContentType','vector') 
+% exportgraphics(gcf, 'DIM/fig/PalDIM3D_CircSrc_Axis_Demo_.png', 'resolution', 300) 

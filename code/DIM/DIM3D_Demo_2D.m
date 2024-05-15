@@ -8,12 +8,13 @@ src.wav.num = 2*pi*src.wav.freq/343 + 1i*AbsorpAttenCoef(src.wav.freq, 'temperat
 src.r = 0.1;
 
 % uniform profile
-% src.prf.name = 'uniform';
-% src.prf.val = @(rhos) 1;
+src.prf.name = 'uniform';
+src.prf.val = @(rhos) 1;
+
 % focusing profile
-src.prf.name = 'focus';
-src.prf.focal_dist = 0.2; % focal distance
-src.prf.val = @(rs) exp(-1i * real(src.wav.num) * sqrt(rs.^2 + src.prf.focal_dist^2));
+% src.prf.name = 'focus';
+% src.prf.focal_dist = 0.2; % focal distance
+% src.prf.val = @(rs) exp(-1i * real(src.wav.num) * sqrt(rs.^2 + src.prf.focal_dist^2));
 
 
 % field points
@@ -22,11 +23,11 @@ fp.y = 0;
 fp.z = linspace(0, 3, 1.1e2);
 
 %% main function
-profile on -memory
+% profile on -memory
 
-[prs, vel] = DIM3D_CircSrc(src, fp, 'int_num', 200);
+[prs, vel] = DIM3D(src, fp, 'int_num', 200, 'int_coord', 'polar');
 
-profile viewer
+% profile viewer
 
 spl = 20*log10(abs(prs)/20e-6/sqrt(2));
 

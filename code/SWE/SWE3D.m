@@ -9,6 +9,7 @@
 %       coordinates of the field points
 % OUTPUT
 %   - prs: normalized to rho0*c0*v0
+%   - vel: normalized to v0
 % -------------------------------------------------------------------------
 % DIMENSION
 %   fp.r -> fp.theta -> fp.phi -> ell -> int
@@ -39,26 +40,16 @@ function [prs, vel] = SWE3D(src, fp, varargin)
     %% Calculate angular components: spherical harmonics
     % dim: 1, 1, 1, ell
     ell = permute((0:ip.max_order).', [4,2,3,1]); % order
-    % dim: ell, 1, 1, 1
-%     Y0 = SphHarmonic(2*ell(:)+abs(prf_azimuth_order), ...
-%         prf_azimuth_order, pi/2, 0);
-    % dim: 1, 1, 1, ell
-%     Y0 = permute(Y0, [4,2,3,1]);
     % dim: ell, 1, theta, phi
-    Y = SphHarmonic(2*ell(:)+abs(src.prf.phi_m), ...
-        src.prf.phi_m, permute(fp.theta,[1,3,2]), ...
-        permute(fp.phi, [1,2,4,3]));
+    Y = SphHarmonic(2*ell(:)+abs(src.prf.phi_m), src.prf.phi_m, permute(fp.theta,[1,3,2]), permute(fp.phi, [1,2,4,3]));
     % dim: 1, theta, phi, ell
     Y = permute(permute(permute(Y, [1,3,2,4]), [1,2,4,3]), [4,2,3,1]);
 
     %% Calculate radial components
-    R = SWE3D_Radial(src, fp.r, ip.max_order, ...
-        'int_num', ip.int_num, ...
-        'is_farfield', ip.is_farfield);
+    R = SWE3D_Radial(src, fp.r, ip.max_order, 'int_num', ip.int_num, 'is_farfield', ip.is_farfield);
 
     %% Calculate the sound pressure
-%     prs = 4*pi * sum(Y0 .* Y .* R, 4);
-    prs = sum(Y .* R, 4);
+    prs = sum(Y .* R, 4) * src.wav.num^2;
 
     if ip.is_norm
         prs = prs ./ max(abs(prs(:)));

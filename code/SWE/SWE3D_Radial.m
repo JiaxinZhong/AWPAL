@@ -63,9 +63,11 @@ function [R, R_prime] = SWE3D_Radial(src, r, ell_max, varargin)
             % origin points
             idx_origin = (r == 0);
             r_origin = r(idx_origin);
+
             % interior points
             idx_int = (r > 0) & (r < src.r);
             r_int = r(idx_int);
+
             % exterior points
             idx_ext = r >= src.r;
             r_ext = r(idx_ext);   
@@ -73,8 +75,7 @@ function [R, R_prime] = SWE3D_Radial(src, r, ell_max, varargin)
             % process origin points
             if ~isempty(r_origin)
                 % dim: ell -> r_origin
-                int = SWE3D_RadialInt(src, ell_m_col, ...
-                    'h', 0, src.r, r_origin.', 'int_num', ip.int_num);
+                int = SWE3D_RadialInt(src, ell_m_col, 'h', 0, src.r, r_origin.', 'int_num', ip.int_num);
                 % dim: r_origin -> 1 -> 1 -> ell
                 R(idx_origin, 1, 1, :) = permute(permute(int, [4,2,3,1]), [2,1,3,4]);
             end

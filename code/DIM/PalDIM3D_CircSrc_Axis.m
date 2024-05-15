@@ -81,8 +81,8 @@ function [prs, prs_tot] = PalDIM3D_CircSrc_Axis(pal, fp, varargin)
         prs_tot = nan;
         return
     end
-    [prs1, vel1] = DIM3D_CircSrc(pal.src1, fp, 'int_num', ip.ultra_int_num, 'is_cal_vel', true);
-    [prs2, vel2] = DIM3D_CircSrc(pal.src2, fp, 'int_num', ip.ultra_int_num, 'is_cal_vel', true);
+    [prs1, vel1] = DIM3D(pal.src1, fp, 'int_num', ip.ultra_int_num, 'is_cal_vel', true, 'int_coord', 'polar');
+    [prs2, vel2] = DIM3D(pal.src2, fp, 'int_num', ip.ultra_int_num, 'is_cal_vel', true, 'int_coord', 'polar');
 
     vel1.z = vel1.z / (rho0 * c0);
     vel2.z = vel2.z / (rho0 * c0);
@@ -98,9 +98,10 @@ function int = Integrand(pal, fp, rho_vsrc, z_vsrc, int_num)
     vsrc.y = 0;
     vsrc.z = z_vsrc;
     vsrc.rho = rho_vsrc;
+
     % calculate ultrasound pressure field
-    prs1 = DIM3D_CircSrc(pal.src1, vsrc, 'int_num', int_num);
-    prs2 = DIM3D_CircSrc(pal.src2, vsrc, 'int_num', int_num);
+    prs1 = DIM3D(pal.src1, vsrc, 'int_num', int_num, 'int_coord', 'polar', 'is_cal_vel', false);
+    prs2 = DIM3D(pal.src2, vsrc, 'int_num', int_num, 'int_coord', 'polar', 'is_cal_vel', false);
 
     % audio sound prssure
     dist = sqrt(vsrc.rho.^2 + (fp.z - vsrc.z).^2);
